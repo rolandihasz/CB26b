@@ -44,6 +44,9 @@ template <> constexpr inline auto VideoFeedWidget::qt_create_metaobjectdata<qt_m
         "roundNumber",
         "roundStr",
         "durationSec",
+        "lapProgressChanged",
+        "currentRound",
+        "elapsedSec",
         "statusMessage",
         "msg",
         "frameCaptured",
@@ -59,6 +62,9 @@ template <> constexpr inline auto VideoFeedWidget::qt_create_metaobjectdata<qt_m
         "onVideoFrameChanged",
         "QVideoFrame",
         "frame",
+        "onDirectShowFrame",
+        "QImage",
+        "image",
         "onInferenceTimer",
         "onScreenCaptureFallback"
     };
@@ -68,38 +74,46 @@ template <> constexpr inline auto VideoFeedWidget::qt_create_metaobjectdata<qt_m
         QtMocHelpers::SignalData<void(int, const QString &, double)>(1, 2, QMC::AccessPublic, QMetaType::Void, {{
             { QMetaType::Int, 3 }, { QMetaType::QString, 4 }, { QMetaType::Double, 5 },
         }}),
+        // Signal 'lapProgressChanged'
+        QtMocHelpers::SignalData<void(int, double)>(6, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::Int, 7 }, { QMetaType::Double, 8 },
+        }}),
         // Signal 'statusMessage'
-        QtMocHelpers::SignalData<void(const QString &)>(6, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QString, 7 },
+        QtMocHelpers::SignalData<void(const QString &)>(9, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 10 },
         }}),
         // Signal 'frameCaptured'
-        QtMocHelpers::SignalData<void(int)>(8, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::Int, 9 },
+        QtMocHelpers::SignalData<void(int)>(11, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::Int, 12 },
         }}),
         // Signal 'videoPositionChanged'
-        QtMocHelpers::SignalData<void(qint64, qint64)>(10, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::LongLong, 11 }, { QMetaType::LongLong, 12 },
+        QtMocHelpers::SignalData<void(qint64, qint64)>(13, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::LongLong, 14 }, { QMetaType::LongLong, 15 },
         }}),
         // Signal 'videoDurationChanged'
-        QtMocHelpers::SignalData<void(qint64)>(13, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::LongLong, 12 },
+        QtMocHelpers::SignalData<void(qint64)>(16, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::LongLong, 15 },
         }}),
         // Signal 'playbackStateChanged'
-        QtMocHelpers::SignalData<void(bool)>(14, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::Bool, 15 },
+        QtMocHelpers::SignalData<void(bool)>(17, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::Bool, 18 },
         }}),
         // Signal 'feedModeChanged'
-        QtMocHelpers::SignalData<void(bool)>(16, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::Bool, 17 },
+        QtMocHelpers::SignalData<void(bool)>(19, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::Bool, 20 },
         }}),
         // Slot 'onVideoFrameChanged'
-        QtMocHelpers::SlotData<void(const QVideoFrame &)>(18, 2, QMC::AccessPrivate, QMetaType::Void, {{
-            { 0x80000000 | 19, 20 },
+        QtMocHelpers::SlotData<void(const QVideoFrame &)>(21, 2, QMC::AccessPrivate, QMetaType::Void, {{
+            { 0x80000000 | 22, 23 },
+        }}),
+        // Slot 'onDirectShowFrame'
+        QtMocHelpers::SlotData<void(const QImage &)>(24, 2, QMC::AccessPrivate, QMetaType::Void, {{
+            { 0x80000000 | 25, 26 },
         }}),
         // Slot 'onInferenceTimer'
-        QtMocHelpers::SlotData<void()>(21, 2, QMC::AccessPrivate, QMetaType::Void),
+        QtMocHelpers::SlotData<void()>(27, 2, QMC::AccessPrivate, QMetaType::Void),
         // Slot 'onScreenCaptureFallback'
-        QtMocHelpers::SlotData<void()>(22, 2, QMC::AccessPrivate, QMetaType::Void),
+        QtMocHelpers::SlotData<void()>(28, 2, QMC::AccessPrivate, QMetaType::Void),
     };
     QtMocHelpers::UintData qt_properties {
     };
@@ -124,22 +138,24 @@ void VideoFeedWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int 
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
         case 0: _t->roundDetected((*reinterpret_cast<std::add_pointer_t<int>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<QString>>(_a[2])),(*reinterpret_cast<std::add_pointer_t<double>>(_a[3]))); break;
-        case 1: _t->statusMessage((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
-        case 2: _t->frameCaptured((*reinterpret_cast<std::add_pointer_t<int>>(_a[1]))); break;
-        case 3: _t->videoPositionChanged((*reinterpret_cast<std::add_pointer_t<qint64>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<qint64>>(_a[2]))); break;
-        case 4: _t->videoDurationChanged((*reinterpret_cast<std::add_pointer_t<qint64>>(_a[1]))); break;
-        case 5: _t->playbackStateChanged((*reinterpret_cast<std::add_pointer_t<bool>>(_a[1]))); break;
-        case 6: _t->feedModeChanged((*reinterpret_cast<std::add_pointer_t<bool>>(_a[1]))); break;
-        case 7: _t->onVideoFrameChanged((*reinterpret_cast<std::add_pointer_t<QVideoFrame>>(_a[1]))); break;
-        case 8: _t->onInferenceTimer(); break;
-        case 9: _t->onScreenCaptureFallback(); break;
+        case 1: _t->lapProgressChanged((*reinterpret_cast<std::add_pointer_t<int>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<double>>(_a[2]))); break;
+        case 2: _t->statusMessage((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
+        case 3: _t->frameCaptured((*reinterpret_cast<std::add_pointer_t<int>>(_a[1]))); break;
+        case 4: _t->videoPositionChanged((*reinterpret_cast<std::add_pointer_t<qint64>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<qint64>>(_a[2]))); break;
+        case 5: _t->videoDurationChanged((*reinterpret_cast<std::add_pointer_t<qint64>>(_a[1]))); break;
+        case 6: _t->playbackStateChanged((*reinterpret_cast<std::add_pointer_t<bool>>(_a[1]))); break;
+        case 7: _t->feedModeChanged((*reinterpret_cast<std::add_pointer_t<bool>>(_a[1]))); break;
+        case 8: _t->onVideoFrameChanged((*reinterpret_cast<std::add_pointer_t<QVideoFrame>>(_a[1]))); break;
+        case 9: _t->onDirectShowFrame((*reinterpret_cast<std::add_pointer_t<QImage>>(_a[1]))); break;
+        case 10: _t->onInferenceTimer(); break;
+        case 11: _t->onScreenCaptureFallback(); break;
         default: ;
         }
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
         switch (_id) {
         default: *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType(); break;
-        case 7:
+        case 8:
             switch (*reinterpret_cast<int*>(_a[1])) {
             default: *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType(); break;
             case 0:
@@ -151,17 +167,19 @@ void VideoFeedWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int 
     if (_c == QMetaObject::IndexOfMethod) {
         if (QtMocHelpers::indexOfMethod<void (VideoFeedWidget::*)(int , const QString & , double )>(_a, &VideoFeedWidget::roundDetected, 0))
             return;
-        if (QtMocHelpers::indexOfMethod<void (VideoFeedWidget::*)(const QString & )>(_a, &VideoFeedWidget::statusMessage, 1))
+        if (QtMocHelpers::indexOfMethod<void (VideoFeedWidget::*)(int , double )>(_a, &VideoFeedWidget::lapProgressChanged, 1))
             return;
-        if (QtMocHelpers::indexOfMethod<void (VideoFeedWidget::*)(int )>(_a, &VideoFeedWidget::frameCaptured, 2))
+        if (QtMocHelpers::indexOfMethod<void (VideoFeedWidget::*)(const QString & )>(_a, &VideoFeedWidget::statusMessage, 2))
             return;
-        if (QtMocHelpers::indexOfMethod<void (VideoFeedWidget::*)(qint64 , qint64 )>(_a, &VideoFeedWidget::videoPositionChanged, 3))
+        if (QtMocHelpers::indexOfMethod<void (VideoFeedWidget::*)(int )>(_a, &VideoFeedWidget::frameCaptured, 3))
             return;
-        if (QtMocHelpers::indexOfMethod<void (VideoFeedWidget::*)(qint64 )>(_a, &VideoFeedWidget::videoDurationChanged, 4))
+        if (QtMocHelpers::indexOfMethod<void (VideoFeedWidget::*)(qint64 , qint64 )>(_a, &VideoFeedWidget::videoPositionChanged, 4))
             return;
-        if (QtMocHelpers::indexOfMethod<void (VideoFeedWidget::*)(bool )>(_a, &VideoFeedWidget::playbackStateChanged, 5))
+        if (QtMocHelpers::indexOfMethod<void (VideoFeedWidget::*)(qint64 )>(_a, &VideoFeedWidget::videoDurationChanged, 5))
             return;
-        if (QtMocHelpers::indexOfMethod<void (VideoFeedWidget::*)(bool )>(_a, &VideoFeedWidget::feedModeChanged, 6))
+        if (QtMocHelpers::indexOfMethod<void (VideoFeedWidget::*)(bool )>(_a, &VideoFeedWidget::playbackStateChanged, 6))
+            return;
+        if (QtMocHelpers::indexOfMethod<void (VideoFeedWidget::*)(bool )>(_a, &VideoFeedWidget::feedModeChanged, 7))
             return;
     }
 }
@@ -185,14 +203,14 @@ int VideoFeedWidget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 10)
+        if (_id < 12)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 10;
+        _id -= 12;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 10)
+        if (_id < 12)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 10;
+        _id -= 12;
     }
     return _id;
 }
@@ -204,38 +222,44 @@ void VideoFeedWidget::roundDetected(int _t1, const QString & _t2, double _t3)
 }
 
 // SIGNAL 1
-void VideoFeedWidget::statusMessage(const QString & _t1)
+void VideoFeedWidget::lapProgressChanged(int _t1, double _t2)
 {
-    QMetaObject::activate<void>(this, &staticMetaObject, 1, nullptr, _t1);
+    QMetaObject::activate<void>(this, &staticMetaObject, 1, nullptr, _t1, _t2);
 }
 
 // SIGNAL 2
-void VideoFeedWidget::frameCaptured(int _t1)
+void VideoFeedWidget::statusMessage(const QString & _t1)
 {
     QMetaObject::activate<void>(this, &staticMetaObject, 2, nullptr, _t1);
 }
 
 // SIGNAL 3
-void VideoFeedWidget::videoPositionChanged(qint64 _t1, qint64 _t2)
+void VideoFeedWidget::frameCaptured(int _t1)
 {
-    QMetaObject::activate<void>(this, &staticMetaObject, 3, nullptr, _t1, _t2);
+    QMetaObject::activate<void>(this, &staticMetaObject, 3, nullptr, _t1);
 }
 
 // SIGNAL 4
-void VideoFeedWidget::videoDurationChanged(qint64 _t1)
+void VideoFeedWidget::videoPositionChanged(qint64 _t1, qint64 _t2)
 {
-    QMetaObject::activate<void>(this, &staticMetaObject, 4, nullptr, _t1);
+    QMetaObject::activate<void>(this, &staticMetaObject, 4, nullptr, _t1, _t2);
 }
 
 // SIGNAL 5
-void VideoFeedWidget::playbackStateChanged(bool _t1)
+void VideoFeedWidget::videoDurationChanged(qint64 _t1)
 {
     QMetaObject::activate<void>(this, &staticMetaObject, 5, nullptr, _t1);
 }
 
 // SIGNAL 6
-void VideoFeedWidget::feedModeChanged(bool _t1)
+void VideoFeedWidget::playbackStateChanged(bool _t1)
 {
     QMetaObject::activate<void>(this, &staticMetaObject, 6, nullptr, _t1);
+}
+
+// SIGNAL 7
+void VideoFeedWidget::feedModeChanged(bool _t1)
+{
+    QMetaObject::activate<void>(this, &staticMetaObject, 7, nullptr, _t1);
 }
 QT_WARNING_POP

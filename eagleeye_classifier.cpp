@@ -226,130 +226,107 @@ QString EagleEyeClassifier::predictRound(const QImage &roiImg, int *roundNumber,
         return QString();
     }
 
-    int w = roiImg.width();
-    int h = roiImg.height();
-    if (w < 10 || h < 10) {
+    // Scale ROI to canonical 189x130 (the exact resolution used for model training & calibration)
+    QImage canonicalRoi = (roiImg.width() == 189 && roiImg.height() == 130)
+        ? roiImg
+        : roiImg.scaled(189, 130, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+
+    QImage rgbImg = canonicalRoi.convertToFormat(QImage::Format_RGB32);
+    const int w = 189;
+    const int h = 130;
+
+    // Detect red blood markings in the 3 digit slots:
+    // Slot 1 (Hundreds): x in [0, 66)
+    // Slot 2 (Tens):     x in [66, 124)
+    // Slot 3 (Ones):     x in [124, 189)
+    int redCount1 = 0;
+    int redCount2 = 0;
+    int redCount3 = 0;
+
+    for (int y = 0; y < h; ++y) {
+        const QRgb *line = reinterpret_cast<const QRgb*>(rgbImg.constScanLine(y));
+        for (int x = 0; x < w; ++x) {
+            QRgb p = line[x];
+            int r = qRed(p);
+            int g = qGreen(p);
+            int b = qBlue(p);
+            // Red pixel condition: R is prominent over G and B (characteristic of Zombies blood tally numbers)
+            if (r > 75 && r > static_cast<int>(g * 1.3f) && r > static_cast<int>(b * 1.3f)) {
+                if (x < 66) {
+                    redCount1++;
+                } else if (x < 124) {
+                    redCount2++;
+                } else {
+                    redCount3++;
+                }
+            }
+        }
+    }
+
+    const int RED_THRESHOLD = 70;
+    bool hasSlot1 = (redCount1 >= RED_THRESHOLD);
+    bool hasSlot2 = (redCount2 >= RED_THRESHOLD);
+    bool hasSlot3 = (redCount3 >= RED_THRESHOLD);
+
+    // If no digits detected at all (e.g. pause menu, lobby, blackout transition)
+    if (!hasSlot3 && !hasSlot2 && !hasSlot1) {
         if (roundNumber) *roundNumber = 0;
         if (avgConf) *avgConf = 0.0f;
         return QString();
     }
 
-    // Convert to 8-bit grayscale for column brightness profiling
-    QImage grayImg = roiImg.convertToFormat(QImage::Format_Grayscale8);
+    // Crop the 3 canonical slots matching capture_dataset.py and auto_sorter.py
+    QImage c1 = canonicalRoi.copy(0, 0, 66, 130);
+    QImage c2 = canonicalRoi.copy(66, 0, 58, 130);
+    QImage c3 = canonicalRoi.copy(124, 0, 65, 130);
 
-    std::vector<int> brightCounts(w, 0);
-    std::vector<uchar> colMax(w, 0);
-    int totalBrightPixels = 0;
+    float conf1 = 0.0f, conf2 = 0.0f, conf3 = 0.0f;
+    int d1 = 0, d2 = 0, d3 = 0;
 
-    for (int x = 0; x < w; ++x) {
-        int cnt = 0;
-        uchar maxV = 0;
-        for (int y = 0; y < h; ++y) {
-            uchar val = grayImg.constScanLine(y)[x];
-            if (val > maxV) maxV = val;
-            if (val > 60) {
-                cnt++;
-            }
-        }
-        brightCounts[x] = cnt;
-        colMax[x] = maxV;
-        totalBrightPixels += cnt;
-    }
-
-    // Find active digit columns (columns with at least 5 bright pixels and max >= 70)
-    int xMin = -1;
-    int xMax = -1;
-    int activeColCount = 0;
-
-    for (int x = 0; x < w; ++x) {
-        if (brightCounts[x] >= 5 && colMax[x] >= 70) {
-            if (xMin < 0) xMin = x;
-            xMax = x;
-            activeColCount++;
-        }
-    }
-
-    // If no clear digits or not enough bright pixels (e.g. lobby screen, loading screen)
-    if (activeColCount < 6 || totalBrightPixels < 60 || xMin < 0 || xMax < xMin) {
-        if (roundNumber) *roundNumber = 0;
-        if (avgConf) *avgConf = 0.0f;
-        return QString();
-    }
-
-    int wActive = xMax - xMin + 1;
-    double wNorm = wActive * (189.0 / w);
-
-    if (wNorm < 75.0) {
-        // ==========================================
-        // CASE 1: SINGLE DIGIT (e.g. 1 - 9)
-        // ==========================================
-        int centerX = (xMin + xMax) / 2;
-        int cropW = std::max(10, static_cast<int>(64.0 * w / 189.0));
-        int cLeft = std::max(0, std::min(centerX - cropW / 2, w - cropW));
-        QImage digitCrop = roiImg.copy(cLeft, 0, cropW, h);
-
-        float conf = 0.0f;
-        int d = predictDigit(digitCrop, &conf);
-        if (roundNumber) *roundNumber = d;
-        if (avgConf) *avgConf = conf;
-        return QString::number(d);
-    }
-    else if (wNorm < 145.0) {
-        // ==========================================
-        // CASE 2: TWO DIGITS (e.g. 10 - 99)
-        // ==========================================
-        // Search for the split valley between the two digits near the middle
-        int mid = (xMin + xMax) / 2;
-        int searchRadius = std::max(3, static_cast<int>(wActive * 0.15));
-        int sStart = std::max(xMin, mid - searchRadius);
-        int sEnd = std::min(xMax, mid + searchRadius);
-
-        int splitX = mid;
-        int minCount = 999999;
-        for (int x = sStart; x <= sEnd; ++x) {
-            if (brightCounts[x] < minCount) {
-                minCount = brightCounts[x];
-                splitX = x;
-            }
-        }
-
-        // Safety fallback if split is too close to edge
-        if (splitX <= xMin + 2 || splitX >= xMax - 2) {
-            splitX = xMin + wActive / 2;
-        }
-
-        QImage c1 = roiImg.copy(xMin, 0, splitX - xMin, h);
-        QImage c2 = roiImg.copy(splitX, 0, xMax - splitX + 1, h);
-
-        float conf1 = 0.0f, conf2 = 0.0f;
-        int d1 = predictDigit(c1, &conf1);
-        int d2 = predictDigit(c2, &conf2);
-
-        int val = d1 * 10 + d2;
-        if (roundNumber) *roundNumber = val;
-        if (avgConf) *avgConf = (conf1 + conf2) / 2.0f;
-        return QString::asprintf("%d%d", d1, d2);
-    }
-    else {
-        // ==========================================
-        // CASE 3: THREE DIGITS (e.g. 100 - 999)
-        // ==========================================
-        double third = wActive / 3.0;
-        int s1 = xMin + static_cast<int>(third);
-        int s2 = xMin + static_cast<int>(2.0 * third);
-
-        QImage c1 = roiImg.copy(xMin, 0, s1 - xMin, h);
-        QImage c2 = roiImg.copy(s1, 0, s2 - s1, h);
-        QImage c3 = roiImg.copy(s2, 0, xMax - s2 + 1, h);
-
-        float conf1 = 0.0f, conf2 = 0.0f, conf3 = 0.0f;
-        int d1 = predictDigit(c1, &conf1);
-        int d2 = predictDigit(c2, &conf2);
-        int d3 = predictDigit(c3, &conf3);
+    if (hasSlot1 && hasSlot2 && hasSlot3) {
+        // CASE 3: Three digits (e.g. 100 - 999)
+        d1 = predictDigit(c1, &conf1);
+        d2 = predictDigit(c2, &conf2);
+        d3 = predictDigit(c3, &conf3);
 
         int val = d1 * 100 + d2 * 10 + d3;
+        float c = (conf1 + conf2 + conf3) / 3.0f;
         if (roundNumber) *roundNumber = val;
-        if (avgConf) *avgConf = (conf1 + conf2 + conf3) / 3.0f;
+        if (avgConf) *avgConf = c;
         return QString::asprintf("%d%d%d", d1, d2, d3);
     }
+    else if (hasSlot2 && hasSlot3) {
+        // CASE 2: Two digits (e.g. 10 - 99)
+        d2 = predictDigit(c2, &conf2);
+        d3 = predictDigit(c3, &conf3);
+
+        int val = d2 * 10 + d3;
+        float c = (conf2 + conf3) / 2.0f;
+        if (roundNumber) *roundNumber = val;
+        if (avgConf) *avgConf = c;
+        return QString::asprintf("%d%d", d2, d3);
+    }
+    else if (hasSlot3) {
+        // CASE 1: Single digit (e.g. 1 - 9)
+        d3 = predictDigit(c3, &conf3);
+
+        int val = d3;
+        float c = conf3;
+        if (roundNumber) *roundNumber = val;
+        if (avgConf) *avgConf = c;
+        return QString::number(d3);
+    }
+    else if (hasSlot2) {
+        // Fallback: single digit detected in slot 2
+        d2 = predictDigit(c2, &conf2);
+        int val = d2;
+        float c = conf2;
+        if (roundNumber) *roundNumber = val;
+        if (avgConf) *avgConf = c;
+        return QString::number(d2);
+    }
+
+    if (roundNumber) *roundNumber = 0;
+    if (avgConf) *avgConf = 0.0f;
+    return QString();
 }

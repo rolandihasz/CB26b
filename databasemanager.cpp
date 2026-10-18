@@ -494,3 +494,22 @@ void DatabaseManager::saveRoundToCsv(int roundNumber, double durationSec, const 
         file.close();
     }
 }
+
+QList<DatabaseManager::DbRoundRecord> DatabaseManager::loadRoundRecords()
+{
+    QList<DbRoundRecord> list;
+    if (!m_db.isOpen()) {
+        initLocalDatabase();
+    }
+    QSqlQuery q(m_db);
+    if (q.exec(QStringLiteral("SELECT round_number, duration_sec, timestamp FROM roundsTable ORDER BY id ASC"))) {
+        while (q.next()) {
+            DbRoundRecord rec;
+            rec.roundNumber = q.value(0).toInt();
+            rec.durationSec = q.value(1).toDouble();
+            rec.timestamp = QDateTime::fromString(q.value(2).toString(), Qt::ISODate);
+            list.append(rec);
+        }
+    }
+    return list;
+}

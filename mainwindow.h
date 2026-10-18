@@ -36,6 +36,7 @@ private slots:
   void appendLog(const QString &message);
   void onRoundDetected(int roundNumber, const QString &roundStr,
                        double durationSec);
+  void onLapProgressChanged(int currentRound, double elapsedSec);
   void onGpuUpdated(const GpuStats &stats);
   void onIpUpdated(const QString &intIp, const QString &extIp);
 
@@ -73,6 +74,7 @@ private:
   void setupUiCustom();
   void setupConnections();
   void initializeSystem();
+  void updateLiveFeedButtonState(bool streamingActive);
 
   Ui::MainWindow *ui;
 
@@ -102,6 +104,8 @@ private:
   QLabel *m_gpuStatsLabel = nullptr;
   QLabel *m_altitudeLabel = nullptr;
   QLabel *m_positionLabel = nullptr;
+  QPushButton *m_btnLiveFeed = nullptr;
+  QPushButton *m_btnVideoToggle = nullptr;
 };
 
 #endif // MAINWINDOW_H

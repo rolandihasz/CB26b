@@ -26,31 +26,9 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
 
-  setWindowTitle(QStringLiteral("CoffeeBreak V1.0"));
+  setWindowTitle(QStringLiteral("CoffeeBreak V1.0 Telemetry Workstation"));
   setWindowIcon(QIcon(QStringLiteral(":/icons/icons/database.ico")));
   setAutoFillBackground(true);
-  setStyleSheet(
-      QStringLiteral("QMainWindow { background-color: #bcbcbc; }\n"
-                     "QWidget { color: #000000; }\n"
-                     "QLabel { color: #000000; }\n"
-                     "QPushButton { color: #000000; }\n"
-                     "QLineEdit { color: #000000; }\n"
-                     "QToolButton { color: #000000; }\n"
-                     "QTabBar::tab { color: #000000; }\n"
-                     "QGroupBox { color: #000000; }\n"
-                     "QProgressBar { color: #000000; }\n"
-                     "QStatusBar { color: #000000; }\n"
-                     "QMenuBar { color: #000000; }\n"
-                     "QMenu { color: #000000; }\n"
-                     "QPlainTextEdit#eventLogView {\n"
-                     "  background-color: #000000;\n"
-                     "  color: #00ff00;\n"
-                     "  font-family: 'Consolas', 'Courier New', monospace;\n"
-                     "  font-size: 9pt;\n"
-                     "  border: 1px solid #333333;\n"
-                     "  selection-background-color: #004400;\n"
-                     "  selection-color: #00ff00;\n"
-                     "}\n"));
 
   // Build the complete interface matching the design
   setupUiCustom();
@@ -75,18 +53,6 @@ void MainWindow::setupUiCustom() {
   m_wavepacketChart = ui->wavepacketChart;
   m_lapTimeChart = ui->lapTimeChart;
   m_eventLogView = ui->eventLogView;
-  if (m_eventLogView) {
-    m_eventLogView->setStyleSheet(
-        QStringLiteral("QPlainTextEdit { "
-                       "  background-color: #000000; "
-                       "  color: #00ff00; "
-                       "  font-family: 'Consolas', 'Courier New', monospace; "
-                       "  font-size: 9pt; "
-                       "  border: 1px solid #333333; "
-                       "  selection-background-color: #004400; "
-                       "  selection-color: #00ff00; "
-                       "}"));
-  }
   m_internalIpEdit = ui->internalIpEdit;
   m_externalIpEdit = ui->externalIpEdit;
   m_statusLabel = ui->statusLabel;
@@ -115,29 +81,29 @@ void MainWindow::setupUiCustom() {
   m_quickTestBtn = new QPushButton(QStringLiteral("Load Test Gameplay"), this);
   m_quickTestBtn->setToolTip(QStringLiteral("Quick load D:\\Containers\\testdata\\pre-recorded-gameplay.mp4"));
   m_quickTestBtn->setStyleSheet(
-      QStringLiteral("QPushButton { background-color: #1a4f80; color: #ffffff; font-weight: bold; padding: 4px 10px; border-radius: 3px; font-size: 11px; margin-right: 4px; }"
-                     "QPushButton:hover { background-color: #266cb0; color: #ffffff; }"
-                     "QPushButton:pressed { background-color: #0f3558; }"));
+      QStringLiteral("QPushButton { background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #0284c7, stop:1 #0369a1); border: 1px solid #38bdf8; color: #ffffff; font-weight: bold; padding: 4px 10px; border-radius: 4px; font-size: 11px; margin-right: 4px; }"
+                     "QPushButton:hover { background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #0ea5e9, stop:1 #0284c7); border-color: #7dd3fc; color: #ffffff; }"
+                     "QPushButton:pressed { background: #0c4a6e; }"));
   connect(m_quickTestBtn, &QPushButton::clicked, this, &MainWindow::onLoadTestGameplayClicked);
   ui->mainToolBar->insertWidget(ui->actionClearLog, m_quickTestBtn);
 
   // Speed Selector ComboBox
   QLabel *speedLbl = new QLabel(QStringLiteral(" Speed: "), this);
-  speedLbl->setStyleSheet(QStringLiteral("font-size: 11px; font-weight: bold; color: #333333;"));
+  speedLbl->setStyleSheet(QStringLiteral("font-size: 11px; font-weight: 600; color: #94a3b8;"));
   ui->mainToolBar->insertWidget(ui->actionClearLog, speedLbl);
 
   m_speedCombo = new QComboBox(this);
   m_speedCombo->addItems({QStringLiteral("1.0x (Normal)"), QStringLiteral("1.5x"), QStringLiteral("2.0x (Fast)"), QStringLiteral("4.0x (Turbo)")});
   m_speedCombo->setStyleSheet(
-      QStringLiteral("QComboBox { background: #ffffff; border: 1px solid #c0c6cf; border-radius: 3px; padding: 2px 6px; font-size: 11px; color: #000000; min-width: 100px; }"
-                     "QComboBox::drop-down { border: none; }"
-                     "QComboBox QAbstractItemView { background: #ffffff; color: #000000; selection-background-color: #d0d8e4; }"));
+      QStringLiteral("QComboBox { background-color: #0b0f19; border: 1px solid #334155; border-radius: 4px; padding: 3px 8px; font-size: 11px; color: #f8fafc; min-width: 105px; }"
+                     "QComboBox:hover { border-color: #38bdf8; }"
+                     "QComboBox QAbstractItemView { background-color: #0f172a; color: #f8fafc; selection-background-color: #1e293b; selection-color: #38bdf8; border: 1px solid #334155; }"));
   connect(m_speedCombo, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &MainWindow::onSpeedChanged);
   ui->mainToolBar->insertWidget(ui->actionClearLog, m_speedCombo);
 
   // Video Time Slider (Seeker)
   QLabel *timeLbl = new QLabel(QStringLiteral(" Position: "), this);
-  timeLbl->setStyleSheet(QStringLiteral("font-size: 11px; font-weight: bold; color: #333333; margin-left: 6px;"));
+  timeLbl->setStyleSheet(QStringLiteral("font-size: 11px; font-weight: 600; color: #94a3b8; margin-left: 6px;"));
   ui->mainToolBar->insertWidget(ui->actionClearLog, timeLbl);
 
   m_timeSlider = new QSlider(Qt::Horizontal, this);
@@ -147,10 +113,10 @@ void MainWindow::setupUiCustom() {
   m_timeSlider->setMaximumWidth(280);
   m_timeSlider->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
   m_timeSlider->setStyleSheet(
-      QStringLiteral("QSlider::groove:horizontal { height: 6px; background: #c5c9d1; border-radius: 3px; }"
-                     "QSlider::sub-page:horizontal { background: #0066cc; border-radius: 3px; }"
-                     "QSlider::handle:horizontal { background: #004499; width: 14px; margin-top: -4px; margin-bottom: -4px; border-radius: 7px; border: 1px solid #ffffff; }"
-                     "QSlider::handle:horizontal:hover { background: #0077ee; }"));
+      QStringLiteral("QSlider::groove:horizontal { height: 6px; background: #1e293b; border-radius: 3px; }"
+                     "QSlider::sub-page:horizontal { background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #0284c7, stop:1 #38bdf8); border-radius: 3px; }"
+                     "QSlider::handle:horizontal { background: #38bdf8; width: 14px; margin-top: -4px; margin-bottom: -4px; border-radius: 7px; border: 1px solid #ffffff; }"
+                     "QSlider::handle:horizontal:hover { background: #7dd3fc; }"));
   connect(m_timeSlider, &QSlider::sliderPressed, this, [this]() { m_userIsSeeking = true; });
   connect(m_timeSlider, &QSlider::sliderReleased, this, [this]() {
     m_userIsSeeking = false;
@@ -160,7 +126,7 @@ void MainWindow::setupUiCustom() {
   ui->mainToolBar->insertWidget(ui->actionClearLog, m_timeSlider);
 
   m_timeLabel = new QLabel(QStringLiteral("00:00 / 00:00"), this);
-  m_timeLabel->setStyleSheet(QStringLiteral("font-family: 'Consolas', monospace; font-size: 11px; color: #111111; padding-left: 4px; padding-right: 10px; font-weight: bold;"));
+  m_timeLabel->setStyleSheet(QStringLiteral("font-family: 'Consolas', monospace; font-size: 11px; color: #38bdf8; padding-left: 4px; padding-right: 10px; font-weight: bold;"));
   ui->mainToolBar->insertWidget(ui->actionClearLog, m_timeLabel);
 
   ui->mainToolBar->insertSeparator(ui->actionClearLog);
@@ -197,9 +163,18 @@ void MainWindow::setupUiCustom() {
           &MainWindow::onHelpDeskClicked);
   connect(ui->btnAccount, &QPushButton::clicked, this,
           &MainWindow::onMyAccountClicked);
-  connect(ui->btnLiveFeed, &QPushButton::clicked, this,
-          &MainWindow::onLiveFeedClicked);
+  m_btnLiveFeed = ui->btnLiveFeed;
+  if (m_btnLiveFeed) {
+    connect(m_btnLiveFeed, &QPushButton::clicked, this,
+            &MainWindow::onLiveFeedClicked);
+  }
+  m_btnVideoToggle = findChild<QPushButton*>("btnVideoToggle");
+  if (m_btnVideoToggle) {
+    connect(m_btnVideoToggle, &QPushButton::clicked, this,
+            &MainWindow::onLiveFeedClicked);
+  }
   connect(ui->btnExit, &QPushButton::clicked, this, &MainWindow::onExitClicked);
+  updateLiveFeedButtonState(true);
 
   // Splitter initial sizes & stretch factors
   ui->topRowSplitter->setStretchFactor(0, 50);
@@ -221,6 +196,8 @@ void MainWindow::setupConnections() {
   m_videoFeed->setEagleEyeClassifier(&m_classifier);
   connect(m_videoFeed, &VideoFeedWidget::roundDetected, this,
           &MainWindow::onRoundDetected);
+  connect(m_videoFeed, &VideoFeedWidget::lapProgressChanged, this,
+          &MainWindow::onLapProgressChanged);
   connect(m_videoFeed, &VideoFeedWidget::statusMessage, this,
           &MainWindow::appendLog);
   connect(m_videoFeed, &VideoFeedWidget::videoPositionChanged, this,
@@ -263,31 +240,62 @@ void MainWindow::initializeSystem() {
   m_databaseMgr->initLocalDatabase();
 
   // 3. Load EagleEye AI model weights
-  QString weightsPath = QStringLiteral("eagle_eye_weights.bin");
-  if (!QFile::exists(weightsPath)) {
-    weightsPath = QStringLiteral("various/EagleEye/eagle_eye_weights.bin");
+  QString weightsPath;
+  const QStringList candidateWeights = {
+      QCoreApplication::applicationDirPath() + QStringLiteral("/eagle_eye_weights.bin"),
+      QCoreApplication::applicationDirPath() + QStringLiteral("/../eagle_eye_weights.bin"),
+      QCoreApplication::applicationDirPath() + QStringLiteral("/../../eagle_eye_weights.bin"),
+      QCoreApplication::applicationDirPath() + QStringLiteral("/../../../eagle_eye_weights.bin"),
+      QStringLiteral("eagle_eye_weights.bin"),
+      QStringLiteral("various/EagleEye/eagle_eye_weights.bin"),
+      QStringLiteral("d:/cb26/cb26/eagle_eye_weights.bin"),
+      QStringLiteral("d:/cb26/cb26/various/EagleEye/eagle_eye_weights.bin"),
+      QStringLiteral("d:/Containers/CB26b/eagle_eye_weights.bin")
+  };
+  for (const QString &p : candidateWeights) {
+    if (QFile::exists(p)) {
+      weightsPath = p;
+      break;
+    }
   }
-  if (m_classifier.loadWeights(weightsPath)) {
+
+  if (!weightsPath.isEmpty() && m_classifier.loadWeights(weightsPath)) {
     appendLog(QStringLiteral(
-        "EagleEye AI Model: Loaded successfully (eagle_eye_weights.bin)."));
+        "EagleEye AI Model: Loaded successfully (%1).").arg(weightsPath));
     appendLog(QStringLiteral(
         "EagleEye AI: Monitoring round counter region [1684, 29, 189, 130]"));
   } else {
     appendLog(QStringLiteral("EagleEye AI: Failed to load weights from %1")
-                  .arg(weightsPath));
+                  .arg(weightsPath.isEmpty() ? QStringLiteral("any candidate path") : weightsPath));
   }
 
   // 4. Pre-load historical rounds into LapTimeChart if CSV exists
-  QString roundsCsv = QStringLiteral("rounds.csv");
-  if (!QFile::exists(roundsCsv)) {
-    roundsCsv = QStringLiteral("various/ai/rounds.csv");
+  QString roundsCsv;
+  const QStringList candidateCsvs = {
+      QCoreApplication::applicationDirPath() + QStringLiteral("/rounds.csv"),
+      QCoreApplication::applicationDirPath() + QStringLiteral("/../rounds.csv"),
+      QCoreApplication::applicationDirPath() + QStringLiteral("/../../rounds.csv"),
+      QCoreApplication::applicationDirPath() + QStringLiteral("/../../../rounds.csv"),
+      QStringLiteral("rounds.csv"),
+      QStringLiteral("various/ai/rounds.csv"),
+      QStringLiteral("d:/cb26/cb26/rounds.csv"),
+      QStringLiteral("d:/cb26/cb26/various/ai/rounds.csv"),
+      QStringLiteral("d:/Containers/CB26b/rounds.csv")
+  };
+  for (const QString &p : candidateCsvs) {
+    if (QFile::exists(p)) {
+      roundsCsv = p;
+      break;
+    }
   }
-  if (QFile::exists(roundsCsv)) {
+  if (!roundsCsv.isEmpty()) {
     m_lapTimeChart->loadFromCsv(roundsCsv);
-    appendLog(QStringLiteral(
-                  "LapTimeChart: Loaded %1 historical round records from %2")
-                  .arg(m_lapTimeChart->roundCount())
-                  .arg(roundsCsv));
+    if (m_lapTimeChart->roundCount() > 0) {
+      appendLog(QStringLiteral(
+                    "LapTimeChart: Loaded %1 historical round records from %2")
+                    .arg(m_lapTimeChart->roundCount())
+                    .arg(roundsCsv));
+    }
   }
 
   // 5. Connect and start OBS Virtual Camera stream as default live feed
@@ -309,7 +317,7 @@ void MainWindow::appendLog(const QString &message) {
 void MainWindow::onRoundDetected(int roundNumber, const QString &roundStr,
                                  double durationSec) {
   QString msg =
-      QStringLiteral("New round detected: %1 (Round %2) | Lap Time: %3 s")
+      QStringLiteral("Round completed: %1 (Round %2) | Lap Time: %3 s")
           .arg(roundStr)
           .arg(roundNumber)
           .arg(QString::number(durationSec, 'f', 1));
@@ -322,6 +330,12 @@ void MainWindow::onRoundDetected(int roundNumber, const QString &roundStr,
   m_databaseMgr->logRound(roundNumber, durationSec);
   m_databaseMgr->saveRoundToCsv(roundNumber, durationSec,
                                 QStringLiteral("rounds.csv"));
+}
+
+void MainWindow::onLapProgressChanged(int currentRound, double elapsedSec) {
+  if (m_lapTimeChart) {
+    m_lapTimeChart->setCurrentLapProgress(currentRound, elapsedSec);
+  }
 }
 
 void MainWindow::onGpuUpdated(const GpuStats &stats) {
@@ -451,6 +465,14 @@ void MainWindow::onVideoPositionChanged(qint64 posMs, qint64 durMs) {
                                           curSec / 60, curSec % 60,
                                           totSec / 60, totSec % 60));
   }
+
+  // Update live expanding lap time in LapTimeChart during video playback
+  if (m_videoFeed && m_lapTimeChart) {
+    int curRound = m_videoFeed->currentRound();
+    if (curRound > 0) {
+      m_lapTimeChart->setCurrentLapProgress(curRound, m_videoFeed->currentLapElapsedSec());
+    }
+  }
 }
 
 void MainWindow::onVideoDurationChanged(qint64 durMs) {
@@ -472,6 +494,20 @@ void MainWindow::onFeedModeChanged(bool isLiveCamera) {
   }
   if (m_timeLabel) {
     m_timeLabel->setText(isLiveCamera ? QStringLiteral("LIVE FEED") : QStringLiteral("00:00 / 00:00"));
+  }
+  updateLiveFeedButtonState(isLiveCamera ? (m_videoFeed ? m_videoFeed->isStreamingActive() : true) : true);
+}
+
+void MainWindow::updateLiveFeedButtonState(bool streamingActive) {
+  if (m_btnLiveFeed) {
+    m_btnLiveFeed->setChecked(streamingActive);
+    m_btnLiveFeed->setText(streamingActive ? QStringLiteral("Live Stream: ON")
+                                           : QStringLiteral("Live Stream: OFF"));
+  }
+  if (m_btnVideoToggle) {
+    m_btnVideoToggle->setChecked(streamingActive);
+    m_btnVideoToggle->setText(streamingActive ? QStringLiteral("STREAM ON")
+                                              : QStringLiteral("STREAM PAUSED"));
   }
 }
 
@@ -541,13 +577,31 @@ void MainWindow::onMyAccountClicked() {
 }
 
 void MainWindow::onLiveFeedClicked() {
-  appendLog(QStringLiteral("Toggling Live Stream HUD Overlay..."));
-  m_videoFeed->setOverlayEnabled(!m_videoFeed->isOverlayEnabled());
+  bool active = m_videoFeed ? m_videoFeed->isStreamingActive() : true;
+  bool newActive = !active;
+  if (m_videoFeed) {
+    m_videoFeed->setStreamingActive(newActive);
+  }
+  updateLiveFeedButtonState(newActive);
+  appendLog(QStringLiteral("Live Video Stream: %1")
+                .arg(newActive ? QStringLiteral("ON (Active Streaming)")
+                               : QStringLiteral("OFF (Standby Mode)")));
 }
 
 void MainWindow::onPlotDataClicked() {
   appendLog(
       QStringLiteral("Plotting database query records into telemetry charts."));
+  if (m_databaseMgr && m_lapTimeChart) {
+    auto dbRounds = m_databaseMgr->loadRoundRecords();
+    if (!dbRounds.isEmpty()) {
+      for (const auto &r : dbRounds) {
+        m_lapTimeChart->addRound(r.roundNumber, r.durationSec, r.timestamp);
+      }
+      appendLog(QStringLiteral("LapTimeChart: Plotted %1 round records from database.").arg(dbRounds.size()));
+    } else {
+      m_lapTimeChart->loadFromCsv(QStringLiteral("rounds.csv"));
+    }
+  }
   m_lapTimeChart->update();
 }
 

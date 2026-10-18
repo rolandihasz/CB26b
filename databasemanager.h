@@ -46,6 +46,13 @@ public:
     bool logRound(int roundNumber, double durationSec, const QDateTime &timestamp = QDateTime::currentDateTime());
     void saveRoundToCsv(int roundNumber, double durationSec, const QString &csvPath);
 
+    struct DbRoundRecord {
+        int roundNumber = 0;
+        double durationSec = 0.0;
+        QDateTime timestamp;
+    };
+    QList<DbRoundRecord> loadRoundRecords();
+
 signals:
     void logMessage(const QString &msg);
     void progressUpdated(int percent);

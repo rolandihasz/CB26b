@@ -207,7 +207,7 @@ public:
         gridLayout->setContentsMargins(16, 14, 16, 12);
         userLabel = new QLabel(formFrame);
         userLabel->setObjectName("userLabel");
-        userLabel->setAlignment(Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignVCenter);
+        userLabel->setAlignment(Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter);
 
         gridLayout->addWidget(userLabel, 0, 0, 1, 1);
 
@@ -220,7 +220,7 @@ public:
 
         passLabel = new QLabel(formFrame);
         passLabel->setObjectName("passLabel");
-        passLabel->setAlignment(Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignVCenter);
+        passLabel->setAlignment(Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter);
 
         gridLayout->addWidget(passLabel, 1, 0, 1, 1);
 
@@ -234,7 +234,7 @@ public:
 
         dbLabel = new QLabel(formFrame);
         dbLabel->setObjectName("dbLabel");
-        dbLabel->setAlignment(Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignVCenter);
+        dbLabel->setAlignment(Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter);
 
         gridLayout->addWidget(dbLabel, 2, 0, 1, 1);
 
@@ -345,7 +345,10 @@ public:
 #endif // QT_CONFIG(tooltip)
         m_powerBtn->setText(QString());
         userLabel->setText(QCoreApplication::translate("LoginDialog", "Username:", nullptr));
+        m_usernameEdit->setText(QCoreApplication::translate("LoginDialog", "admin", nullptr));
         passLabel->setText(QCoreApplication::translate("LoginDialog", "Password:", nullptr));
+        m_passwordEdit->setText(QCoreApplication::translate("LoginDialog", "admin", nullptr));
+        m_passwordEdit->setPlaceholderText(QCoreApplication::translate("LoginDialog", "admin", nullptr));
         dbLabel->setText(QCoreApplication::translate("LoginDialog", "Database:", nullptr));
         m_databaseCombo->setItemText(0, QCoreApplication::translate("LoginDialog", "SQLite Local DB", nullptr));
 

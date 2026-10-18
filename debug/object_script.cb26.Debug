@@ -5,6 +5,7 @@ debug/laptimechart.o
 debug/signalchart.o
 debug/wavepacketchart.o
 debug/videofeedwidget.o
+debug/dshow_capture.o
 debug/telemetrymanager.o
 debug/databasemanager.o
 debug/logindialog.o
@@ -14,6 +15,7 @@ debug/moc_laptimechart.o
 debug/moc_signalchart.o
 debug/moc_wavepacketchart.o
 debug/moc_videofeedwidget.o
+debug/moc_dshow_capture.o
 debug/moc_telemetrymanager.o
 debug/moc_databasemanager.o
 debug/moc_logindialog.o

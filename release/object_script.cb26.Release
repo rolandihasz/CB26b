@@ -5,6 +5,7 @@ release/laptimechart.o
 release/signalchart.o
 release/wavepacketchart.o
 release/videofeedwidget.o
+release/dshow_capture.o
 release/telemetrymanager.o
 release/databasemanager.o
 release/logindialog.o
@@ -14,6 +15,7 @@ release/moc_laptimechart.o
 release/moc_signalchart.o
 release/moc_wavepacketchart.o
 release/moc_videofeedwidget.o
+release/moc_dshow_capture.o
 release/moc_telemetrymanager.o
 release/moc_databasemanager.o
 release/moc_logindialog.o

@@ -14,6 +14,7 @@
 #include <QMutex>
 #include <QFileInfo>
 #include "eagleeye_classifier.h"
+#include "dshow_capture.h"
 
 class VideoFeedWidget : public QWidget {
     Q_OBJECT
@@ -60,8 +61,15 @@ public:
     void setOverlayEnabled(bool enabled) { m_showOverlay = enabled; update(); }
     bool isOverlayEnabled() const { return m_showOverlay; }
 
+    void setStreamingActive(bool active);
+    bool isStreamingActive() const { return m_streamingActive; }
+
+    void setTargetFps(int fps);
+    int targetFps() const;
+
 signals:
     void roundDetected(int roundNumber, const QString &roundStr, double durationSec);
+    void lapProgressChanged(int currentRound, double elapsedSec);
     void statusMessage(const QString &msg);
     void frameCaptured(int fps);
     void videoPositionChanged(qint64 positionMs, qint64 durationMs);
@@ -76,12 +84,14 @@ protected:
 
 private slots:
     void onVideoFrameChanged(const QVideoFrame &frame);
+    void onDirectShowFrame(const QImage &image);
     void onInferenceTimer();
     void onScreenCaptureFallback();
 
 private:
     FeedMode m_feedMode = FeedMode::LiveCamera;
 
+    DirectShowCapture *m_dshowCapture = nullptr;
     QCamera *m_camera = nullptr;
     QMediaCaptureSession *m_captureSession = nullptr;
     QVideoSink *m_videoSink = nullptr;
@@ -123,6 +133,7 @@ private:
     QTimer m_fallbackTimer;
 
     bool m_cameraActive = false;
+    bool m_streamingActive = true;
     bool m_showOverlay = true;
     bool m_liveBlinkState = true;
     QTimer m_blinkTimer;

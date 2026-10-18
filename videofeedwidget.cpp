@@ -24,6 +24,10 @@ VideoFeedWidget::VideoFeedWidget(QWidget *parent)
     m_captureSession = new QMediaCaptureSession(this);
     m_captureSession->setVideoSink(m_videoSink);
 
+    m_dshowCapture = new DirectShowCapture(this);
+    connect(m_dshowCapture, &DirectShowCapture::frameReady, this, &VideoFeedWidget::onDirectShowFrame);
+    connect(m_dshowCapture, &DirectShowCapture::statusMessage, this, &VideoFeedWidget::statusMessage);
+
     // Setup Video Player for pre-recorded gameplay analysis
     m_player = new QMediaPlayer(this);
     m_audioOutput = new QAudioOutput(this);
@@ -54,9 +58,9 @@ VideoFeedWidget::VideoFeedWidget(QWidget *parent)
     m_fpsTimer.start();
     m_lapTimer.start();
 
-    // AI Inference timer (run ~3 times per second at 1x)
+    // AI Inference timer (run ~5 times per second at 1x)
     connect(&m_inferenceTimer, &QTimer::timeout, this, &VideoFeedWidget::onInferenceTimer);
-    m_inferenceTimer.start(350);
+    m_inferenceTimer.start(200);
 
     // Blinking timer for LIVE badge
     connect(&m_blinkTimer, &QTimer::timeout, this, [this]() {
@@ -75,6 +79,9 @@ VideoFeedWidget::~VideoFeedWidget()
     m_blinkTimer.stop();
     m_fallbackTimer.stop();
 
+    if (m_dshowCapture) {
+        m_dshowCapture->stop();
+    }
     if (m_player) {
         m_player->stop();
     }
@@ -101,6 +108,15 @@ bool VideoFeedWidget::initCamera(const QString &preferredDeviceName)
     m_feedMode = FeedMode::LiveCamera;
     m_captureSession->setVideoSink(m_videoSink);
 
+    // 1. DirectShow native capture for OBS Virtual Camera & Windows capture filters
+    if (m_dshowCapture && m_dshowCapture->start(preferredDeviceName)) {
+        m_cameraActive = true;
+        m_fallbackTimer.stop();
+        emit feedModeChanged(true);
+        return true;
+    }
+
+    // 2. Fall back to Qt 6 QMediaDevices for WDM / Media Foundation cameras
     const QList<QCameraDevice> cameras = QMediaDevices::videoInputs();
     if (cameras.isEmpty()) {
         emit statusMessage(QStringLiteral("No camera devices detected. Starting screen capture fallback..."));
@@ -165,7 +181,7 @@ bool VideoFeedWidget::openVideoFile(const QString &filePath)
     m_lastRoundStr = QStringLiteral("-");
     m_candidateRound = 0;
     m_candidateCount = 0;
-    m_lastRoundStartPosMs = 0;
+    m_lastRoundStartPosMs = -1;
     m_lapTimer.restart();
 
     emit feedModeChanged(false);
@@ -237,9 +253,68 @@ void VideoFeedWidget::switchToLiveCamera()
     initCamera();
 }
 
+void VideoFeedWidget::setStreamingActive(bool active)
+{
+    m_streamingActive = active;
+    if (m_feedMode == FeedMode::LiveCamera) {
+        if (!m_streamingActive) {
+            if (m_dshowCapture) m_dshowCapture->stop();
+            if (m_camera) m_camera->stop();
+            m_fallbackTimer.stop();
+            m_inferenceTimer.stop();
+            emit statusMessage(QStringLiteral("Live Video Stream: PAUSED (Standby Mode)"));
+        } else {
+            initCamera();
+            m_inferenceTimer.start(350);
+            emit statusMessage(QStringLiteral("Live Video Stream: ACTIVE (Resumed)"));
+        }
+    } else {
+        if (!m_streamingActive) {
+            pause();
+        } else {
+            play();
+        }
+    }
+    update();
+}
+
+void VideoFeedWidget::setTargetFps(int fps)
+{
+    if (m_dshowCapture) {
+        m_dshowCapture->setTargetFps(fps);
+    }
+}
+
+int VideoFeedWidget::targetFps() const
+{
+    return m_dshowCapture ? m_dshowCapture->targetFps() : 60;
+}
+
+void VideoFeedWidget::onDirectShowFrame(const QImage &image)
+{
+    if (m_feedMode != FeedMode::LiveCamera || !m_streamingActive || image.isNull()) return;
+
+    {
+        QMutexLocker locker(&m_frameMutex);
+        m_currentFrame = image;
+    }
+
+    m_cameraActive = true;
+    m_frameCount++;
+
+    qint64 now = m_fpsTimer.elapsed();
+    if (now >= 1000) {
+        m_cameraFps = static_cast<int>(m_frameCount * 1000.0 / now);
+        m_frameCount = 0;
+        m_fpsTimer.restart();
+        emit frameCaptured(m_cameraFps);
+    }
+    update();
+}
+
 void VideoFeedWidget::onVideoFrameChanged(const QVideoFrame &frame)
 {
-    if (!frame.isValid()) return;
+    if (!m_streamingActive || !frame.isValid()) return;
 
     QImage img = frame.toImage();
     if (img.isNull()) return;
@@ -262,6 +337,7 @@ void VideoFeedWidget::onVideoFrameChanged(const QVideoFrame &frame)
 
 void VideoFeedWidget::onScreenCaptureFallback()
 {
+    if (!m_streamingActive) return;
     if (m_cameraActive && !m_currentFrame.isNull()) return;
 
     // Grab primary screen as a fallback
@@ -278,7 +354,7 @@ void VideoFeedWidget::onScreenCaptureFallback()
 
 void VideoFeedWidget::onInferenceTimer()
 {
-    if (!m_classifier || !m_classifier->isLoaded()) return;
+    if (!m_streamingActive || !m_classifier || !m_classifier->isLoaded()) return;
 
     QImage frameCopy;
     {
@@ -320,7 +396,35 @@ void VideoFeedWidget::onInferenceTimer()
 
     m_lastConfidence = confidence;
 
-    // Trigger round detection with debouncing (requires 2 consecutive matching frames)
+    // 1. Initial round detection when starting a video or live stream
+    if (m_lastRound == 0) {
+        if (detectedRound == m_candidateRound) {
+            m_candidateCount++;
+        } else {
+            m_candidateRound = detectedRound;
+            m_candidateRoundStr = roundStr;
+            m_candidateCount = 1;
+        }
+
+        if (m_candidateCount >= 2 || confidence >= 0.90f) {
+            m_lastRound = detectedRound;
+            m_lastRoundStr = roundStr;
+            m_candidateCount = 0;
+            if (m_feedMode == FeedMode::VideoFile && m_player) {
+                m_lastRoundStartPosMs = m_player->position();
+            } else {
+                m_lastRoundStartPosMs = 0;
+            }
+            m_lapTimer.restart();
+
+            emit statusMessage(QStringLiteral("EagleEye AI: Tracking initiated at Round %1").arg(detectedRound));
+            emit lapProgressChanged(detectedRound, 0.0);
+            update();
+        }
+        return;
+    }
+
+    // 2. Subsequent round detection: round change means previous round finished!
     if (detectedRound != m_lastRound) {
         if (detectedRound == m_candidateRound) {
             m_candidateCount++;
@@ -330,11 +434,11 @@ void VideoFeedWidget::onInferenceTimer()
             m_candidateCount = 1;
         }
 
-        if (m_candidateCount >= 2) {
+        if (m_candidateCount >= 2 || confidence >= 0.95f) {
             double durationSec = 0.0;
             if (m_feedMode == FeedMode::VideoFile && m_player) {
                 qint64 curPos = m_player->position();
-                if (m_lastRoundStartPosMs > 0 && curPos >= m_lastRoundStartPosMs) {
+                if (m_lastRoundStartPosMs >= 0 && curPos >= m_lastRoundStartPosMs) {
                     durationSec = (curPos - m_lastRoundStartPosMs) / 1000.0;
                 } else {
                     durationSec = m_lapTimer.restart() / 1000.0;
@@ -344,16 +448,21 @@ void VideoFeedWidget::onInferenceTimer()
                 durationSec = m_lapTimer.restart() / 1000.0;
             }
 
+            int finishedRound = m_lastRound;
+            QString finishedStr = m_lastRoundStr;
+
             m_lastRound = detectedRound;
             m_lastRoundStr = roundStr;
             m_candidateCount = 0;
 
-            emit roundDetected(detectedRound, roundStr, durationSec);
+            emit roundDetected(finishedRound, finishedStr, durationSec);
+            emit lapProgressChanged(detectedRound, 0.0);
             update();
         }
     } else {
         m_lastRoundStr = roundStr;
         m_candidateCount = 0;
+        emit lapProgressChanged(m_lastRound, currentLapElapsedSec());
         update();
     }
 }
@@ -362,7 +471,7 @@ double VideoFeedWidget::currentLapElapsedSec() const
 {
     if (m_feedMode == FeedMode::VideoFile && m_player) {
         qint64 pos = m_player->position();
-        if (pos >= m_lastRoundStartPosMs && m_lastRoundStartPosMs > 0) {
+        if (m_lastRoundStartPosMs >= 0 && pos >= m_lastRoundStartPosMs) {
             return (pos - m_lastRoundStartPosMs) / 1000.0;
         }
         return pos / 1000.0;
@@ -398,8 +507,46 @@ void VideoFeedWidget::paintEvent(QPaintEvent *)
     int w = width();
     int h = height();
 
-    // Background colour set to #bcbcbc
-    p.fillRect(rect(), QColor(QStringLiteral("#bcbcbc")));
+    // High-tech dark telemetry canvas
+    p.fillRect(rect(), QColor(7, 10, 20));
+
+    // If stream is paused by user toggle:
+    if (!m_streamingActive) {
+        int cx = w / 2;
+        int cy = h / 2;
+
+        QPen ringPen(QColor(30, 41, 59), 1, Qt::DotLine);
+        p.setPen(ringPen);
+        p.setBrush(Qt::NoBrush);
+        p.drawEllipse(QPoint(cx, cy), 50, 50);
+        p.drawEllipse(QPoint(cx, cy), 100, 100);
+        p.drawEllipse(QPoint(cx, cy), 160, 160);
+
+        QPen crossPen(QColor(51, 65, 85), 1, Qt::SolidLine);
+        p.setPen(crossPen);
+        p.drawLine(cx - 180, cy, cx + 180, cy);
+        p.drawLine(cx, cy - 120, cx, cy + 120);
+
+        QRect pillRect(cx - 120, cy - 35, 240, 32);
+        p.setPen(QColor(245, 158, 11)); // Amber
+        p.setBrush(QColor(15, 23, 42, 230));
+        p.drawRoundedRect(pillRect, 6, 6);
+
+        QFont font = p.font();
+        font.setPointSize(10);
+        font.setBold(true);
+        p.setFont(font);
+        p.setPen(QColor(245, 158, 11));
+        p.drawText(pillRect, Qt::AlignCenter, QStringLiteral("● LIVE STREAM PAUSED"));
+
+        font.setPointSize(9);
+        font.setBold(false);
+        p.setFont(font);
+        p.setPen(QColor(148, 163, 184));
+        p.drawText(QRect(cx - 200, cy + 8, 400, 40), Qt::AlignCenter, 
+                   QStringLiteral("EagleEye AI Camera Acquisition Idle\nClick 'Live Stream' Toggle to Resume"));
+        return;
+    }
 
     QImage frame;
     {
@@ -408,19 +555,39 @@ void VideoFeedWidget::paintEvent(QPaintEvent *)
     }
 
     if (frame.isNull()) {
-        // Standby Screen
-        p.setPen(Qt::black);
+        int cx = w / 2;
+        int cy = h / 2;
+
+        QPen ringPen(QColor(30, 41, 59), 1, Qt::DashLine);
+        p.setPen(ringPen);
+        p.setBrush(Qt::NoBrush);
+        p.drawEllipse(QPoint(cx, cy), 60, 60);
+        p.drawEllipse(QPoint(cx, cy), 130, 130);
+
         QFont font = p.font();
         font.setPointSize(10);
         font.setBold(true);
         p.setFont(font);
+        p.setPen(QColor(56, 189, 248)); // Cyan
 
         if (m_feedMode == FeedMode::VideoFile) {
-            p.drawText(rect(), Qt::AlignCenter, 
-                       QStringLiteral("Gameplay Video Ready\nClick Play or Open Video to begin analysis"));
+            p.drawText(QRect(cx - 220, cy - 25, 440, 24), Qt::AlignCenter, 
+                       QStringLiteral("GAMEPLAY VIDEO READY"));
+            font.setPointSize(8);
+            font.setBold(false);
+            p.setFont(font);
+            p.setPen(QColor(148, 163, 184));
+            p.drawText(QRect(cx - 220, cy + 5, 440, 20), Qt::AlignCenter, 
+                       QStringLiteral("Click Play or Open Video to Begin EagleEye AI Telemetry Run"));
         } else {
-            p.drawText(rect(), Qt::AlignCenter, 
-                       QStringLiteral("Waiting for OBS Virtual Camera Stream...\n(1920 x 1080 Delayed Game Live Stream)"));
+            p.drawText(QRect(cx - 220, cy - 25, 440, 24), Qt::AlignCenter, 
+                       QStringLiteral("SEARCHING FOR OBS VIRTUAL CAMERA SIGNAL..."));
+            font.setPointSize(8);
+            font.setBold(false);
+            p.setFont(font);
+            p.setPen(QColor(148, 163, 184));
+            p.drawText(QRect(cx - 220, cy + 5, 440, 20), Qt::AlignCenter, 
+                       QStringLiteral("1920 x 1080 Real-Time Stream Target • EagleEye AI Standby"));
         }
         return;
     }
@@ -562,6 +729,21 @@ void VideoFeedWidget::contextMenuEvent(QContextMenuEvent *event)
     connect(toggleOverlay, &QAction::triggered, this, [this]() {
         setOverlayEnabled(!m_showOverlay);
     });
+
+    QMenu *fpsMenu = menu.addMenu(tr("Stream Framerate (FPS)"));
+    const int fpsOptions[] = { 60, 30, 15 };
+    for (int fps : fpsOptions) {
+        QString label = (fps == 60) ? QStringLiteral("60 FPS (Ultra Smooth)")
+                      : (fps == 30) ? QStringLiteral("30 FPS (Balanced)")
+                                    : QStringLiteral("15 FPS (Power Saver)");
+        if (targetFps() == fps) {
+            label += QStringLiteral("  ✓");
+        }
+        QAction *act = fpsMenu->addAction(label);
+        connect(act, &QAction::triggered, this, [this, fps]() {
+            setTargetFps(fps);
+        });
+    }
 
     menu.addSeparator();
 

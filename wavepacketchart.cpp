@@ -40,8 +40,8 @@ void WavepacketChart::paintEvent(QPaintEvent *)
     int w = width();
     int h = height();
 
-    // Clean white background
-    p.fillRect(rect(), Qt::white);
+    // High-tech dark telemetry canvas
+    p.fillRect(rect(), QColor(13, 19, 31));
 
     const int ml = 40; // left
     const int mr = 15; // right
@@ -66,7 +66,7 @@ void WavepacketChart::paintEvent(QPaintEvent *)
     };
 
     // Grid lines
-    QPen gridPen(QColor(230, 230, 230), 1, Qt::DotLine);
+    QPen gridPen(QColor(30, 41, 59), 1, Qt::DotLine);
     p.setPen(gridPen);
 
     for (int gx = -15; gx <= 15; gx += 5) {
@@ -81,7 +81,7 @@ void WavepacketChart::paintEvent(QPaintEvent *)
     }
 
     // Outer frame & axis
-    QPen axisPen(Qt::black, 1, Qt::SolidLine);
+    QPen axisPen(QColor(51, 65, 85), 1, Qt::SolidLine);
     p.setPen(axisPen);
     p.drawRect(ml, mt, plotW, plotH);
 
@@ -89,6 +89,7 @@ void WavepacketChart::paintEvent(QPaintEvent *)
     QFont font = p.font();
     font.setPointSize(7);
     p.setFont(font);
+    p.setPen(QColor(148, 163, 184));
 
     for (int gx = -15; gx <= 15; gx += 5) {
         QPointF pt = toScreen(gx, minY);
@@ -125,8 +126,8 @@ void WavepacketChart::paintEvent(QPaintEvent *)
         }
     }
 
-    // Draw wavepacket line (red/brown tone matching screenshot)
-    QPen wavePen(QColor(180, 50, 50), 1.5, Qt::SolidLine);
+    // Draw wavepacket line (Cyan glow)
+    QPen wavePen(QColor(6, 182, 212), 2.0, Qt::SolidLine);
     p.setPen(wavePen);
     p.drawPath(wavePath);
 
@@ -135,10 +136,10 @@ void WavepacketChart::paintEvent(QPaintEvent *)
     QPointF bRight = toScreen(7.5, 1.15);
     QPointF bMid = toScreen(0.0, 1.15);
 
-    QPen bracketPen(Qt::black, 1.2, Qt::SolidLine);
+    QPen bracketPen(QColor(129, 140, 248), 1.2, Qt::SolidLine);
     p.setPen(bracketPen);
 
-    // Draw bracket: left tip down, horizontal, center tip up, horizontal, right tip down
+    // Draw bracket
     p.drawLine(bLeft.x(), bLeft.y() + 6, bLeft.x(), bLeft.y());
     p.drawLine(bLeft.x(), bLeft.y(), bMid.x() - 4, bMid.y());
     p.drawLine(bMid.x() - 4, bMid.y(), bMid.x(), bMid.y() - 5);
@@ -149,23 +150,24 @@ void WavepacketChart::paintEvent(QPaintEvent *)
     font.setBold(true);
     font.setPointSize(8);
     p.setFont(font);
+    p.setPen(QColor(248, 250, 252));
     p.drawText(QRect(static_cast<int>(bMid.x()) - 50, static_cast<int>(bMid.y()) - 22, 100, 16), 
                Qt::AlignCenter, QStringLiteral("Wavepacket"));
 
-    // 2. Group velocity tracer (Blue circle at fixed packet envelope position x = 5.5)
+    // 2. Group velocity tracer
     double gx = 5.5;
     double gy = waveFunc(gx);
     QPointF gPt = toScreen(gx, gy);
 
-    p.setBrush(QColor(0, 80, 220));
-    p.setPen(QPen(Qt::black, 1));
+    p.setBrush(QColor(56, 189, 248));
+    p.setPen(QPen(Qt::white, 1));
     p.drawEllipse(gPt, 4.5, 4.5);
 
     // Group velocity label & arrow
     font.setBold(false);
     font.setPointSize(7);
     p.setFont(font);
-    p.setPen(Qt::black);
+    p.setPen(QColor(203, 213, 225));
 
     QPointF gTextPos = toScreen(8.5, 0.9);
     QRect gTextRect(static_cast<int>(gTextPos.x()), static_cast<int>(gTextPos.y()), 95, 32);
@@ -176,26 +178,27 @@ void WavepacketChart::paintEvent(QPaintEvent *)
     QPainterPath gArrow;
     gArrow.moveTo(gTextRect.left() - 4, gTextRect.top() + 10);
     gArrow.quadTo(gTextRect.left() - 25, gTextRect.top() + 15, gPt.x() + 6, gPt.y() - 4);
-    p.setPen(QPen(Qt::black, 1));
+    p.setPen(QPen(QColor(56, 189, 248), 1));
     p.drawPath(gArrow);
     p.drawLine(gPt.x() + 6, gPt.y() - 4, gPt.x() + 12, gPt.y() - 8);
     p.drawLine(gPt.x() + 6, gPt.y() - 4, gPt.x() + 8, gPt.y() - 12);
 
-    // 3. Phase velocity tracer (Green circle tracking moving phase crest)
+    // 3. Phase velocity tracer
     double px = std::fmod(-m_phase / k, 4.0 * M_PI / k);
     if (px < -6.0) px += 4.0 * M_PI / k;
     if (px > 6.0) px -= 4.0 * M_PI / k;
-    px += 4.2; // place in right flank matching screenshot
+    px += 4.2;
     double py = waveFunc(px);
     QPointF pPt = toScreen(px, py);
 
-    p.setBrush(QColor(30, 200, 60));
-    p.setPen(QPen(Qt::black, 1));
+    p.setBrush(QColor(16, 185, 129));
+    p.setPen(QPen(Qt::white, 1));
     p.drawEllipse(pPt, 4.5, 4.5);
 
     // Phase velocity label & arrow
     QPointF pTextPos = toScreen(8.5, -0.6);
     QRect pTextRect(static_cast<int>(pTextPos.x()), static_cast<int>(pTextPos.y()), 95, 32);
+    p.setPen(QColor(203, 213, 225));
     p.drawText(pTextRect, Qt::AlignLeft | Qt::AlignTop, 
                QStringLiteral("Points of fixed\nphase define\nphase velocity vp"));
 
@@ -203,7 +206,7 @@ void WavepacketChart::paintEvent(QPaintEvent *)
     QPainterPath pArrow;
     pArrow.moveTo(pTextRect.left() - 4, pTextRect.top() + 12);
     pArrow.quadTo(pTextRect.left() - 20, pTextRect.top() + 10, pPt.x() + 5, pPt.y() + 5);
-    p.setPen(QPen(Qt::black, 1));
+    p.setPen(QPen(QColor(16, 185, 129), 1));
     p.drawPath(pArrow);
     p.drawLine(pPt.x() + 5, pPt.y() + 5, pPt.x() + 11, pPt.y() + 9);
     p.drawLine(pPt.x() + 5, pPt.y() + 5, pPt.x() + 7, pPt.y() + 13);
@@ -211,10 +214,12 @@ void WavepacketChart::paintEvent(QPaintEvent *)
     // 4. Dispersion label with leftward arrow on the left side
     QPointF dTextPos = toScreen(-11.0, -0.5);
     QRect dTextRect(static_cast<int>(dTextPos.x()), static_cast<int>(dTextPos.y()), 80, 28);
+    p.setPen(QColor(148, 163, 184));
     p.drawText(dTextRect, Qt::AlignLeft | Qt::AlignTop, QStringLiteral("Dispersion with\nvp < vg"));
 
     QPointF dArrowStart = toScreen(-7.5, -0.4);
     QPointF dArrowEnd = toScreen(-11.5, -0.2);
+    p.setPen(QPen(QColor(148, 163, 184), 1));
     p.drawLine(dArrowStart, dArrowEnd);
     p.drawLine(dArrowEnd.x(), dArrowEnd.y(), dArrowEnd.x() + 6, dArrowEnd.y() - 4);
     p.drawLine(dArrowEnd.x(), dArrowEnd.y(), dArrowEnd.x() + 5, dArrowEnd.y() + 4);

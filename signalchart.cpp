@@ -79,8 +79,8 @@ void SignalChart::paintEvent(QPaintEvent *)
     int w = width();
     int h = height();
 
-    // Clean white background
-    p.fillRect(rect(), Qt::white);
+    // High-tech dark telemetry canvas
+    p.fillRect(rect(), QColor(13, 19, 31));
 
     const int ml = 45; // left margin
     const int mr = 15; // right margin
@@ -93,7 +93,7 @@ void SignalChart::paintEvent(QPaintEvent *)
     if (plotW <= 10 || plotH <= 10) return;
 
     // Grid lines
-    QPen gridPen(QColor(225, 225, 225), 1, Qt::DotLine);
+    QPen gridPen(QColor(30, 41, 59), 1, Qt::DotLine);
     p.setPen(gridPen);
 
     int numYSteps = 4; // -1.0, -0.5, 0.0, 0.5, 1.0
@@ -109,7 +109,7 @@ void SignalChart::paintEvent(QPaintEvent *)
     }
 
     // Outer frame & axis
-    QPen axisPen(Qt::black, 1, Qt::SolidLine);
+    QPen axisPen(QColor(51, 65, 85), 1, Qt::SolidLine);
     p.setPen(axisPen);
     p.drawRect(ml, mt, plotW, plotH);
 
@@ -117,6 +117,7 @@ void SignalChart::paintEvent(QPaintEvent *)
     QFont font = p.font();
     font.setPointSize(7);
     p.setFont(font);
+    p.setPen(QColor(148, 163, 184));
 
     double yLabels[] = {1.0, 0.5, 0.0, -0.5, -1.0};
     for (int i = 0; i <= numYSteps; ++i) {
@@ -129,8 +130,6 @@ void SignalChart::paintEvent(QPaintEvent *)
     // X Axis time labels
     double currentSec = m_elapsedTimer.elapsed() / 1000.0;
     double startSec = currentSec - m_windowDuration;
-
-    QTime baseTime = QTime::currentTime().addSecs(-static_cast<int>(m_windowDuration));
 
     for (int i = 0; i <= numXSteps; ++i) {
         int px = ml + static_cast<int>(i * (plotW / static_cast<double>(numXSteps)));
@@ -172,13 +171,13 @@ void SignalChart::paintEvent(QPaintEvent *)
             }
         }
 
-        // Green line
-        QPen penGreen(QColor(50, 180, 50), 1.5, Qt::SolidLine);
+        // Green line (GPU Util - Neon Emerald)
+        QPen penGreen(QColor(16, 185, 129), 2.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
         p.setPen(penGreen);
         p.drawPath(pathGreen);
 
-        // Red line
-        QPen penRed(QColor(210, 45, 45), 1.5, Qt::SolidLine);
+        // Red line (GPU Temp - Neon Coral)
+        QPen penRed(QColor(244, 63, 94), 2.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
         p.setPen(penRed);
         p.drawPath(pathRed);
     }
@@ -186,7 +185,7 @@ void SignalChart::paintEvent(QPaintEvent *)
     // FPS / data points overlay
     font.setPointSize(7);
     p.setFont(font);
-    p.setPen(Qt::black);
+    p.setPen(QColor(56, 189, 248)); // Cyan
     QString infoStr = QStringLiteral("%1 FPS, Total Points: %2")
                           .arg(m_lastFps)
                           .arg(m_buffer.size() * 2);

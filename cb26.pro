@@ -10,6 +10,7 @@ HEADERS += mainwindow.h \
            signalchart.h \
            wavepacketchart.h \
            videofeedwidget.h \
+           dshow_capture.h \
            telemetrymanager.h \
            databasemanager.h \
            logindialog.h
@@ -24,10 +25,11 @@ SOURCES += main.cpp \
            signalchart.cpp \
            wavepacketchart.cpp \
            videofeedwidget.cpp \
+           dshow_capture.cpp \
            telemetrymanager.cpp \
            databasemanager.cpp \
            logindialog.cpp
 
-win32: LIBS += -lbcrypt
+win32: LIBS += -lbcrypt -lstrmiids -lole32 -loleaut32
 
 RESOURCES += icons.qrc

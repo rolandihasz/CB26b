@@ -11,34 +11,438 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>CoffeeBreak V1.0</string>
+   <string>CoffeeBreak V1.0 Telemetry Workstation</string>
   </property>
   <property name="windowIcon">
-   <iconset>
+   <iconset resource="icons.qrc">
     <normaloff>:/icons/icons/database.ico</normaloff>:/icons/icons/database.ico</iconset>
   </property>
-  <property name="autoFillBackground">
-   <bool>false</bool>
-  </property>
   <property name="styleSheet">
-   <string notr="true">background-color: #bcbcbc;</string>
+   <string notr="true">/* ===================================================================
+   COFFEEBREAK TELEMETRY - WORLD CLASS MISSION CONTROL THEME
+   =================================================================== */
+
+QMainWindow {
+    background-color: #0b0f19;
+    color: #f8fafc;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Inter', 'Roboto', sans-serif;
+    font-size: 11px;
+}
+
+QWidget#centralwidget {
+    background-color: #0b0f19;
+}
+
+/* --- Splitters --- */
+QSplitter::handle {
+    background-color: #1e293b;
+}
+QSplitter::handle:horizontal {
+    width: 3px;
+}
+QSplitter::handle:vertical {
+    height: 3px;
+}
+QSplitter::handle:hover {
+    background-color: #38bdf8;
+}
+
+/* --- Card Containers and Panels --- */
+QFrame[isCard="true"] {
+    background-color: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 6px;
+}
+QFrame[isCard="true"]:hover {
+    border: 1px solid #334155;
+}
+
+QWidget#eventLogContainer, QWidget#rightPanelContainer {
+    background-color: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 6px;
+}
+
+/* --- Card Headers --- */
+QLabel[isHeader="true"], QLabel#eventLogHeader {
+    color: #38bdf8;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 0.8px;
+    padding: 5px 10px;
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #162238, stop:1 #111a2c);
+    border-bottom: 1px solid #1e293b;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+QLabel[isBadge="true"] {
+    background-color: #1e293b;
+    color: #94a3b8;
+    font-size: 9px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 3px;
+    border: 1px solid #334155;
+}
+
+/* --- Toolbar --- */
+QToolBar#mainToolBar {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #151e30, stop:1 #0c121e);
+    border-bottom: 1px solid #1e293b;
+    spacing: 6px;
+    padding: 3px 8px;
+}
+
+QToolButton {
+    background-color: #1e293b;
+    color: #e2e8f0;
+    border: 1px solid #334155;
+    border-radius: 5px;
+    padding: 5px 12px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+QToolButton:hover {
+    background-color: #27354d;
+    border-color: #38bdf8;
+    color: #38bdf8;
+}
+
+QToolButton:pressed {
+    background-color: #0f172a;
+    border-color: #0284c7;
+    color: #0284c7;
+}
+
+/* --- Push Buttons --- */
+QPushButton {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #222f44, stop:1 #1a2436);
+    color: #f1f5f9;
+    border: 1px solid #334155;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #2d3e5a, stop:1 #223048);
+    border-color: #38bdf8;
+    color: #ffffff;
+}
+
+QPushButton:pressed {
+    background: #141d2c;
+    border-color: #0284c7;
+    color: #38bdf8;
+}
+
+QPushButton:disabled {
+    background: #111827;
+    border-color: #1f2937;
+    color: #4b5563;
+}
+
+/* Primary Action: Run Query */
+QPushButton#btnRunQuery {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #0284c7, stop:1 #0369a1);
+    border: 1px solid #38bdf8;
+    color: #ffffff;
+    font-weight: bold;
+}
+QPushButton#btnRunQuery:hover {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #0ea5e9, stop:1 #0284c7);
+    border-color: #7dd3fc;
+}
+
+/* Success Action: Save */
+QPushButton#btnSave, QPushButton#btnSavePg {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #059669, stop:1 #047857);
+    border: 1px solid #10b981;
+    color: #ffffff;
+}
+QPushButton#btnSave:hover, QPushButton#btnSavePg:hover {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #10b981, stop:1 #059669);
+    border-color: #34d399;
+}
+
+/* Secondary Action: Plot Data */
+QPushButton#btnPlotData {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #4f46e5, stop:1 #4338ca);
+    border: 1px solid #818cf8;
+    color: #ffffff;
+}
+QPushButton#btnPlotData:hover {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #6366f1, stop:1 #4f46e5);
+}
+
+/* Live Stream Toggle Buttons */
+QPushButton#btnLiveFeed, QPushButton#btnVideoToggle {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #064e3b, stop:1 #065f46);
+    border: 1px solid #10b981;
+    color: #34d399;
+    font-weight: bold;
+    padding: 4px 10px;
+}
+QPushButton#btnLiveFeed:hover, QPushButton#btnVideoToggle:hover {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #047857, stop:1 #065f46);
+    border-color: #34d399;
+    color: #ffffff;
+}
+QPushButton#btnLiveFeed:checked, QPushButton#btnVideoToggle:checked {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #065f46, stop:1 #047857);
+    border: 1px solid #34d399;
+    color: #a7f3d0;
+}
+QPushButton#btnLiveFeed:!checked, QPushButton#btnVideoToggle:!checked {
+    background: #1f2937;
+    border: 1px solid #6b7280;
+    color: #9ca3af;
+}
+
+/* Danger Zone Buttons (Drop Table) */
+QPushButton#btnDrop1, QPushButton#btnDrop2 {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #7f1d1d, stop:1 #991b1b);
+    border: 1px solid #ef4444;
+    color: #fee2e2;
+}
+QPushButton#btnDrop1:hover, QPushButton#btnDrop2:hover {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #991b1b, stop:1 #b91c1c);
+    border-color: #f87171;
+}
+
+/* Warning Buttons (Disconnect) */
+QPushButton#btnDisconn1, QPushButton#btnDisconn2 {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #78350f, stop:1 #92400e);
+    border: 1px solid #f59e0b;
+    color: #fef3c7;
+}
+QPushButton#btnDisconn1:hover, QPushButton#btnDisconn2:hover {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #92400e, stop:1 #b45309);
+    border-color: #fbbf24;
+}
+
+/* Exit Button */
+QPushButton#btnExit {
+    background: #1e293b;
+    border: 1px solid #475569;
+    color: #f87171;
+}
+QPushButton#btnExit:hover {
+    background: #991b1b;
+    border-color: #ef4444;
+    color: #ffffff;
+}
+
+/* --- LineEdits --- */
+QLineEdit {
+    background-color: #0b0f19;
+    border: 1px solid #334155;
+    border-radius: 4px;
+    padding: 4px 8px;
+    color: #f8fafc;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 11px;
+}
+QLineEdit:focus {
+    border: 1px solid #38bdf8;
+    background-color: #0f172a;
+}
+QLineEdit[readOnly="true"] {
+    background-color: #080c14;
+    border-color: #1e293b;
+    color: #38bdf8;
+}
+
+/* --- Labels --- */
+QLabel {
+    color: #cbd5e1;
+    font-size: 11px;
+}
+
+/* --- Status Badges --- */
+QLabel#statusLabel {
+    background-color: #064e3b;
+    color: #34d399;
+    border: 1px solid #059669;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-weight: bold;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+}
+
+QLabel#altitudeLabel, QLabel#positionLabel {
+    background-color: #0b0f19;
+    border: 1px solid #1e293b;
+    border-radius: 4px;
+    padding: 4px 8px;
+    color: #94a3b8;
+    font-family: 'Consolas', monospace;
+    font-size: 10px;
+}
+
+QLabel#warnLbl {
+    color: #f87171;
+    font-weight: bold;
+    font-size: 10px;
+    padding: 4px 6px;
+    background-color: rgba(127, 29, 29, 0.25);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    border-radius: 4px;
+}
+
+/* --- Group Boxes --- */
+QGroupBox {
+    background-color: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 6px;
+    margin-top: 18px;
+    padding: 12px 8px 8px 8px;
+    font-size: 10px;
+    font-weight: bold;
+    color: #38bdf8;
+    letter-spacing: 0.5px;
+}
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 10px;
+    top: 3px;
+    padding: 0 4px;
+    background-color: #0f172a;
+    color: #38bdf8;
+}
+
+/* --- Tab Widget --- */
+QTabWidget::pane {
+    border: 1px solid #1e293b;
+    background: #0f172a;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+
+QTabBar::tab {
+    background: #111827;
+    border: 1px solid #1e293b;
+    border-bottom: none;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    padding: 5px 12px;
+    margin-right: 2px;
+    font-size: 11px;
+    font-weight: 500;
+    color: #94a3b8;
+}
+
+QTabBar::tab:selected {
+    background: #0f172a;
+    border-color: #38bdf8;
+    border-bottom-color: #0f172a;
+    font-weight: bold;
+    color: #38bdf8;
+}
+
+QTabBar::tab:hover:!selected {
+    background: #1f293d;
+    color: #f1f5f9;
+}
+
+/* --- Progress Bar --- */
+QProgressBar {
+    background-color: #0b0f19;
+    border: 1px solid #1e293b;
+    border-radius: 4px;
+    text-align: center;
+    height: 16px;
+    font-size: 10px;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+QProgressBar::chunk {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #0284c7, stop:1 #38bdf8);
+    border-radius: 3px;
+}
+
+/* --- Event Log View (Terminal) --- */
+QPlainTextEdit#eventLogView {
+    background-color: #070a12;
+    color: #22c55e;
+    font-family: 'Consolas', 'Cascadia Code', 'Courier New', monospace;
+    font-size: 9pt;
+    border: 1px solid #1e293b;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    selection-background-color: #064e3b;
+    selection-color: #34d399;
+    padding: 6px;
+}
+
+/* --- ScrollBars --- */
+QScrollBar:vertical {
+    border: none;
+    background: #070a12;
+    width: 8px;
+    margin: 0px 0px 0px 0px;
+}
+QScrollBar::handle:vertical {
+    background: #334155;
+    min-height: 20px;
+    border-radius: 4px;
+}
+QScrollBar::handle:vertical:hover {
+    background: #475569;
+}
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar:horizontal {
+    border: none;
+    background: #070a12;
+    height: 8px;
+}
+QScrollBar::handle:horizontal {
+    background: #334155;
+    min-width: 20px;
+    border-radius: 4px;
+}
+QScrollBar::handle:horizontal:hover {
+    background: #475569;
+}
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+    width: 0px;
+}
+
+/* --- Status Bar --- */
+QStatusBar {
+    background-color: #0b0f19;
+    border-top: 1px solid #1e293b;
+    color: #64748b;
+    font-size: 10px;
+}
+</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="mainVBox">
     <property name="spacing">
-     <number>4</number>
+     <number>6</number>
     </property>
     <property name="leftMargin">
-     <number>4</number>
+     <number>6</number>
     </property>
     <property name="topMargin">
-     <number>4</number>
+     <number>6</number>
     </property>
     <property name="rightMargin">
-     <number>4</number>
+     <number>6</number>
     </property>
     <property name="bottomMargin">
-     <number>4</number>
+     <number>6</number>
     </property>
     <item>
      <widget class="QSplitter" name="vSplitter">
@@ -49,16 +453,13 @@
        <bool>false</bool>
       </property>
       <widget class="QSplitter" name="topRowSplitter">
-       <property name="styleSheet">
-        <string notr="true">border-color: rgb(0, 0, 0);</string>
-       </property>
        <property name="orientation">
         <enum>Qt::Orientation::Horizontal</enum>
        </property>
        <property name="childrenCollapsible">
         <bool>false</bool>
        </property>
-       <widget class="VideoFeedWidget" name="videoFeed" native="true">
+       <widget class="QFrame" name="cardVideoFeed">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
           <horstretch>50</horstretch>
@@ -71,8 +472,105 @@
           <height>360</height>
          </size>
         </property>
+        <property name="frameShape">
+         <enum>QFrame::Shape::StyledPanel</enum>
+        </property>
+        <property name="isCard" stdset="0">
+         <bool>true</bool>
+        </property>
+        <layout class="QVBoxLayout" name="cardVideoLayout">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QWidget" name="videoHeaderBar" native="true">
+           <layout class="QHBoxLayout" name="videoHeaderLayout">
+            <property name="spacing">
+             <number>6</number>
+            </property>
+            <property name="leftMargin">
+             <number>8</number>
+            </property>
+            <property name="topMargin">
+             <number>4</number>
+            </property>
+            <property name="rightMargin">
+             <number>8</number>
+            </property>
+            <property name="bottomMargin">
+             <number>4</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="videoTitle">
+              <property name="text">
+               <string>LIVE VIDEO STREAM • OBS / EAGLEEYE AI DETECTION</string>
+              </property>
+              <property name="isHeader" stdset="0">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="videoHeaderSpacer">
+              <property name="orientation">
+               <enum>Qt::Orientation::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btnVideoToggle">
+              <property name="toolTip">
+               <string>Toggle Live Video Stream On / Off</string>
+              </property>
+              <property name="text">
+               <string>STREAM ON</string>
+              </property>
+              <property name="icon">
+               <iconset resource="icons.qrc">
+                <normaloff>:/icons/icons/power-switch.svg</normaloff>:/icons/icons/power-switch.svg</iconset>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="VideoFeedWidget" name="videoFeed" native="true">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
-       <widget class="SignalChart" name="signalChart" native="true">
+       <widget class="QFrame" name="cardSignalChart">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
           <horstretch>25</horstretch>
@@ -85,8 +583,95 @@
           <height>180</height>
          </size>
         </property>
+        <property name="frameShape">
+         <enum>QFrame::Shape::StyledPanel</enum>
+        </property>
+        <property name="isCard" stdset="0">
+         <bool>true</bool>
+        </property>
+        <layout class="QVBoxLayout" name="cardSignalLayout">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QWidget" name="signalHeaderBar" native="true">
+           <layout class="QHBoxLayout" name="signalHeaderLayout">
+            <property name="spacing">
+             <number>6</number>
+            </property>
+            <property name="leftMargin">
+             <number>8</number>
+            </property>
+            <property name="topMargin">
+             <number>4</number>
+            </property>
+            <property name="rightMargin">
+             <number>8</number>
+            </property>
+            <property name="bottomMargin">
+             <number>4</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="signalTitle">
+              <property name="text">
+               <string>GPU &amp; SENSOR TELEMETRY</string>
+              </property>
+              <property name="isHeader" stdset="0">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="signalHeaderSpacer">
+              <property name="orientation">
+               <enum>Qt::Orientation::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QLabel" name="signalBadge">
+              <property name="text">
+               <string>CH1: UTIL | CH2: TEMP</string>
+              </property>
+              <property name="isBadge" stdset="0">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="SignalChart" name="signalChart" native="true">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
-       <widget class="WavepacketChart" name="wavepacketChart" native="true">
+       <widget class="QFrame" name="cardWavepacketChart">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
           <horstretch>25</horstretch>
@@ -99,6 +684,93 @@
           <height>180</height>
          </size>
         </property>
+        <property name="frameShape">
+         <enum>QFrame::Shape::StyledPanel</enum>
+        </property>
+        <property name="isCard" stdset="0">
+         <bool>true</bool>
+        </property>
+        <layout class="QVBoxLayout" name="cardWaveLayout">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QWidget" name="waveHeaderBar" native="true">
+           <layout class="QHBoxLayout" name="waveHeaderLayout">
+            <property name="spacing">
+             <number>6</number>
+            </property>
+            <property name="leftMargin">
+             <number>8</number>
+            </property>
+            <property name="topMargin">
+             <number>4</number>
+            </property>
+            <property name="rightMargin">
+             <number>8</number>
+            </property>
+            <property name="bottomMargin">
+             <number>4</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="waveTitle">
+              <property name="text">
+               <string>WAVEPACKET FREQUENCY</string>
+              </property>
+              <property name="isHeader" stdset="0">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="waveHeaderSpacer">
+              <property name="orientation">
+               <enum>Qt::Orientation::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QLabel" name="waveBadge">
+              <property name="text">
+               <string>30 FPS REALTIME</string>
+              </property>
+              <property name="isBadge" stdset="0">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="WavepacketChart" name="wavepacketChart" native="true">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
       </widget>
       <widget class="QSplitter" name="botRowSplitter">
@@ -108,7 +780,7 @@
        <property name="childrenCollapsible">
         <bool>false</bool>
        </property>
-       <widget class="LapTimeChart" name="lapTimeChart" native="true">
+       <widget class="QFrame" name="cardLapTime">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
           <horstretch>35</horstretch>
@@ -121,52 +793,173 @@
           <height>180</height>
          </size>
         </property>
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(203, 203, 203);</string>
+        <property name="frameShape">
+         <enum>QFrame::Shape::StyledPanel</enum>
         </property>
-       </widget>
-       <widget class="QWidget" name="eventLogContainer">
-        <layout class="QVBoxLayout" name="eventLogLayout">
+        <property name="isCard" stdset="0">
+         <bool>true</bool>
+        </property>
+        <layout class="QVBoxLayout" name="cardLapLayout">
          <property name="spacing">
-          <number>2</number>
+          <number>0</number>
          </property>
          <property name="leftMargin">
-          <number>2</number>
+          <number>0</number>
          </property>
          <property name="topMargin">
-          <number>2</number>
+          <number>0</number>
          </property>
          <property name="rightMargin">
-          <number>2</number>
+          <number>0</number>
          </property>
          <property name="bottomMargin">
-          <number>2</number>
+          <number>0</number>
          </property>
          <item>
-          <widget class="QLabel" name="eventLogHeader">
-           <property name="font">
-            <font>
-             <pointsize>9</pointsize>
-             <bold>true</bold>
-            </font>
+          <widget class="QWidget" name="lapHeaderBar" native="true">
+           <layout class="QHBoxLayout" name="lapHeaderLayout">
+            <property name="spacing">
+             <number>6</number>
+            </property>
+            <property name="leftMargin">
+             <number>8</number>
+            </property>
+            <property name="topMargin">
+             <number>4</number>
+            </property>
+            <property name="rightMargin">
+             <number>8</number>
+            </property>
+            <property name="bottomMargin">
+             <number>4</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="lapTitle">
+              <property name="text">
+               <string>LAP TIME PERFORMANCE EXPANSION</string>
+              </property>
+              <property name="isHeader" stdset="0">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="lapHeaderSpacer">
+              <property name="orientation">
+               <enum>Qt::Orientation::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QLabel" name="lapBadge">
+              <property name="text">
+               <string>HISTORICAL ANALYSIS</string>
+              </property>
+              <property name="isBadge" stdset="0">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="LapTimeChart" name="lapTimeChart" native="true">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
            </property>
-           <property name="styleSheet">
-            <string notr="true">color: rgb(0, 0, 0);</string>
-           </property>
-           <property name="text">
-            <string>Event log</string>
-           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="eventLogContainer">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>35</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <layout class="QVBoxLayout" name="eventLogLayout">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QWidget" name="logHeaderBar" native="true">
+           <layout class="QHBoxLayout" name="logHeaderLayout">
+            <property name="spacing">
+             <number>6</number>
+            </property>
+            <property name="leftMargin">
+             <number>8</number>
+            </property>
+            <property name="topMargin">
+             <number>4</number>
+            </property>
+            <property name="rightMargin">
+             <number>8</number>
+            </property>
+            <property name="bottomMargin">
+             <number>4</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="eventLogHeader">
+              <property name="text">
+               <string>DIAGNOSTIC &amp; AUDIT EVENT LOG</string>
+              </property>
+              <property name="isHeader" stdset="0">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="logHeaderSpacer">
+              <property name="orientation">
+               <enum>Qt::Orientation::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QLabel" name="logStreamBadge">
+              <property name="text">
+               <string>● LIVE STREAMING</string>
+              </property>
+              <property name="isBadge" stdset="0">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </widget>
          </item>
          <item>
           <widget class="QPlainTextEdit" name="eventLogView">
-           <property name="styleSheet">
-            <string notr="true">background-color: rgb(0, 0, 0);
-color: rgb(0, 255, 0);
-font-family: 'Consolas', 'Courier New', monospace;
-font-size: 9pt;
-border: 1px solid #333333;</string>
-           </property>
            <property name="readOnly">
             <bool>true</bool>
            </property>
@@ -175,173 +968,76 @@ border: 1px solid #333333;</string>
         </layout>
        </widget>
        <widget class="QWidget" name="rightPanelContainer">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>30</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <layout class="QHBoxLayout" name="rightPanelHBox">
          <property name="spacing">
           <number>6</number>
          </property>
          <property name="leftMargin">
-          <number>2</number>
+          <number>4</number>
          </property>
          <property name="topMargin">
-          <number>2</number>
+          <number>4</number>
          </property>
          <property name="rightMargin">
-          <number>2</number>
+          <number>4</number>
          </property>
          <property name="bottomMargin">
-          <number>2</number>
+          <number>4</number>
          </property>
          <item>
           <widget class="QTabWidget" name="dbTabs">
-           <property name="styleSheet">
-            <string notr="true">QTabWidget::pane { border: 1px solid #c0c6cf; background: #fbfbfb; }
-QTabBar::tab { background: #e9ecef; border: 1px solid #c0c6cf; padding: 4px 10px; margin-right: 2px; font-size: 11px; color: #000000; }
-QTabBar::tab:selected { background: #ffffff; border-bottom-color: #ffffff; font-weight: bold; color: #000000; }</string>
-           </property>
            <property name="currentIndex">
-            <number>1</number>
+            <number>0</number>
            </property>
-           <widget class="QWidget" name="tabPostgreSql">
-            <attribute name="icon">
-             <iconset resource="icons.qrc">
-              <normaloff>:/icons/icons/Postgresql.svg</normaloff>:/icons/icons/Postgresql.svg</iconset>
-            </attribute>
-            <attribute name="title">
-             <string>PostgreSQL</string>
-            </attribute>
-            <layout class="QVBoxLayout" name="tabPgLayout">
-             <property name="spacing">
-              <number>5</number>
-             </property>
-             <property name="leftMargin">
-              <number>6</number>
-             </property>
-             <property name="topMargin">
-              <number>6</number>
-             </property>
-             <property name="rightMargin">
-              <number>6</number>
-             </property>
-             <property name="bottomMargin">
-              <number>6</number>
-             </property>
-             <item>
-              <widget class="QLabel" name="tabPgTitle">
-               <property name="styleSheet">
-                <string notr="true">font-size: 11px; font-weight: bold; color: #000000;</string>
-               </property>
-               <property name="text">
-                <string>PostgreSQL database managment</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="rPg1">
-               <item>
-                <widget class="QLineEdit" name="iterationEditPg">
-                 <property name="styleSheet">
-                  <string notr="true">padding: 3px; font-size: 11px; color: #000000;</string>
-                 </property>
-                 <property name="text">
-                  <string>8</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QPushButton" name="btnReqDataPg">
-                 <property name="styleSheet">
-                  <string notr="true">padding: 3px 6px; font-size: 11px; color: #000000;</string>
-                 </property>
-                 <property name="text">
-                  <string>Request data</string>
-                 </property>
-                 <property name="icon">
-                  <iconset resource="icons.qrc">
-                   <normaloff>:/icons/icons/bubble.svg</normaloff>:/icons/icons/bubble.svg</iconset>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="rPg2">
-               <item>
-                <widget class="QPushButton" name="btnSetIterPg">
-                 <property name="styleSheet">
-                  <string notr="true">padding: 3px 6px; font-size: 11px; color: #000000;</string>
-                 </property>
-                 <property name="text">
-                  <string>Set Iteration</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QPushButton" name="btnSavePg">
-                 <property name="styleSheet">
-                  <string notr="true">padding: 3px 6px; font-size: 11px; color: #000000;</string>
-                 </property>
-                 <property name="text">
-                  <string>Save</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <spacer name="spacerPg">
-               <property name="orientation">
-                <enum>Qt::Orientation::Vertical</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>20</width>
-                 <height>40</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-            </layout>
-           </widget>
            <widget class="QWidget" name="tabSqlite">
             <attribute name="icon">
              <iconset resource="icons.qrc">
               <normaloff>:/icons/icons/sqlite_icon.svg</normaloff>:/icons/icons/sqlite_icon.svg</iconset>
             </attribute>
             <attribute name="title">
-             <string>SQLite</string>
+             <string>SQLite Local</string>
             </attribute>
             <layout class="QVBoxLayout" name="tabSqliteLayout">
              <property name="spacing">
               <number>5</number>
              </property>
              <property name="leftMargin">
-              <number>6</number>
+              <number>8</number>
              </property>
              <property name="topMargin">
-              <number>6</number>
+              <number>8</number>
              </property>
              <property name="rightMargin">
-              <number>6</number>
+              <number>8</number>
              </property>
              <property name="bottomMargin">
-              <number>6</number>
+              <number>8</number>
              </property>
              <item>
               <widget class="QLabel" name="tabTitle">
                <property name="styleSheet">
-                <string notr="true">font-size: 11px; font-weight: bold; color: #000000;</string>
+                <string notr="true">font-size: 11px; font-weight: bold; color: #38bdf8;</string>
                </property>
                <property name="text">
-                <string>SQLite database managment</string>
+                <string>SQLite Database Management</string>
                </property>
               </widget>
              </item>
              <item>
               <layout class="QHBoxLayout" name="r1">
+               <property name="spacing">
+                <number>4</number>
+               </property>
                <item>
                 <widget class="QLineEdit" name="iterationEdit">
-                 <property name="styleSheet">
-                  <string notr="true">padding: 3px; font-size: 11px; color: #000000;</string>
+                 <property name="toolTip">
+                  <string>Query Iteration Batch Count</string>
                  </property>
                  <property name="text">
                   <string>8</string>
@@ -350,11 +1046,11 @@ QTabBar::tab:selected { background: #ffffff; border-bottom-color: #ffffff; font-
                </item>
                <item>
                 <widget class="QPushButton" name="btnReqData">
-                 <property name="styleSheet">
-                  <string notr="true">padding: 3px 6px; font-size: 11px; color: #000000;</string>
+                 <property name="toolTip">
+                  <string>Request Table Data</string>
                  </property>
                  <property name="text">
-                  <string>Request data</string>
+                  <string>Request Data</string>
                  </property>
                  <property name="icon">
                   <iconset resource="icons.qrc">
@@ -366,23 +1062,34 @@ QTabBar::tab:selected { background: #ffffff; border-bottom-color: #ffffff; font-
              </item>
              <item>
               <layout class="QHBoxLayout" name="r2">
+               <property name="spacing">
+                <number>4</number>
+               </property>
                <item>
                 <widget class="QPushButton" name="btnSetIter">
-                 <property name="styleSheet">
-                  <string notr="true">padding: 3px 6px; font-size: 11px; color: #000000;</string>
+                 <property name="toolTip">
+                  <string>Set Iteration Parameter</string>
                  </property>
                  <property name="text">
                   <string>Set Iteration</string>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="icons.qrc">
+                   <normaloff>:/icons/icons/cloud.svg</normaloff>:/icons/icons/cloud.svg</iconset>
                  </property>
                 </widget>
                </item>
                <item>
                 <widget class="QPushButton" name="btnSave">
-                 <property name="styleSheet">
-                  <string notr="true">padding: 3px 6px; font-size: 11px; color: #000000;</string>
+                 <property name="toolTip">
+                  <string>Save Snapshot &amp; Config</string>
                  </property>
                  <property name="text">
                   <string>Save</string>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="icons.qrc">
+                   <normaloff>:/icons/icons/download.svg</normaloff>:/icons/icons/download.svg</iconset>
                  </property>
                 </widget>
                </item>
@@ -390,10 +1097,13 @@ QTabBar::tab:selected { background: #ffffff; border-bottom-color: #ffffff; font-
              </item>
              <item>
               <layout class="QHBoxLayout" name="r3">
+               <property name="spacing">
+                <number>4</number>
+               </property>
                <item>
                 <widget class="QPushButton" name="btnRunQuery">
-                 <property name="styleSheet">
-                  <string notr="true">padding: 3px 6px; font-size: 11px; color: #000000;</string>
+                 <property name="toolTip">
+                  <string>Execute Database Query</string>
                  </property>
                  <property name="text">
                   <string>Run Query</string>
@@ -406,8 +1116,8 @@ QTabBar::tab:selected { background: #ffffff; border-bottom-color: #ffffff; font-
                </item>
                <item>
                 <widget class="QPushButton" name="btnPlotData">
-                 <property name="styleSheet">
-                  <string notr="true">padding: 3px 6px; font-size: 11px; color: #000000;</string>
+                 <property name="toolTip">
+                  <string>Plot Query Results</string>
                  </property>
                  <property name="text">
                   <string>Plot Data</string>
@@ -421,44 +1131,49 @@ QTabBar::tab:selected { background: #ffffff; border-bottom-color: #ffffff; font-
               </layout>
              </item>
              <item>
-              <widget class="QLabel" name="altitudeLabel">
-               <property name="styleSheet">
-                <string notr="true">font-size: 11px; color: #000000;</string>
+              <layout class="QHBoxLayout" name="rTelemetry">
+               <property name="spacing">
+                <number>4</number>
                </property>
-               <property name="text">
-                <string>Altitude: 124 m</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="positionLabel">
-               <property name="styleSheet">
-                <string notr="true">font-size: 11px; color: #000000;</string>
-               </property>
-               <property name="text">
-                <string>Current Position: Sector A - Lobby</string>
-               </property>
-              </widget>
+               <item>
+                <widget class="QLabel" name="altitudeLabel">
+                 <property name="text">
+                  <string>Alt: 124 m</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignmentFlag::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="positionLabel">
+                 <property name="text">
+                  <string>Sec A - Lobby</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignmentFlag::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
              <item>
               <layout class="QHBoxLayout" name="rProg">
+               <property name="spacing">
+                <number>4</number>
+               </property>
                <item>
                 <widget class="QLabel" name="lblProc">
                  <property name="styleSheet">
-                  <string notr="true">font-size: 11px;
-color: rgb(0, 0, 0);</string>
+                  <string notr="true">font-size: 10px; color: #94a3b8;</string>
                  </property>
                  <property name="text">
-                  <string>Process(%):</string>
+                  <string>Progress:</string>
                  </property>
                 </widget>
                </item>
                <item>
                 <widget class="QProgressBar" name="progressBar">
-                 <property name="styleSheet">
-                  <string notr="true">QProgressBar { border: 1px solid #c0c6cf; border-radius: 2px; text-align: center; height: 16px; font-size: 10px; color: #000000; }
-QProgressBar::chunk { background-color: #3b82f6; }</string>
-                 </property>
                  <property name="value">
                   <number>0</number>
                  </property>
@@ -471,11 +1186,8 @@ QProgressBar::chunk { background-color: #3b82f6; }</string>
              </item>
              <item>
               <widget class="QLabel" name="warnLbl">
-               <property name="styleSheet">
-                <string notr="true">color: #000000; font-weight: bold; font-size: 10px;</string>
-               </property>
                <property name="text">
-                <string>WARNING! All data will pemanently deleted!</string>
+                <string>CAUTION: Irreversible Database Actions</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -484,23 +1196,28 @@ QProgressBar::chunk { background-color: #3b82f6; }</string>
              </item>
              <item>
               <layout class="QHBoxLayout" name="rWarn1">
+               <property name="spacing">
+                <number>4</number>
+               </property>
                <item>
                 <widget class="QPushButton" name="btnDrop1">
-                 <property name="styleSheet">
-                  <string notr="true">padding: 3px; font-size: 10px; color: #000000;</string>
-                 </property>
                  <property name="text">
                   <string>Drop DB Table</string>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="icons.qrc">
+                   <normaloff>:/icons/icons/trash.svg</normaloff>:/icons/icons/trash.svg</iconset>
                  </property>
                 </widget>
                </item>
                <item>
                 <widget class="QPushButton" name="btnDisconn1">
-                 <property name="styleSheet">
-                  <string notr="true">padding: 3px; font-size: 10px; color: #000000;</string>
-                 </property>
                  <property name="text">
-                  <string>Disconnect Database</string>
+                  <string>Disconnect</string>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="icons.qrc">
+                   <normaloff>:/icons/icons/power-switch.svg</normaloff>:/icons/icons/power-switch.svg</iconset>
                  </property>
                 </widget>
                </item>
@@ -508,11 +1225,11 @@ QProgressBar::chunk { background-color: #3b82f6; }</string>
              </item>
              <item>
               <layout class="QHBoxLayout" name="rWarn2">
+               <property name="spacing">
+                <number>4</number>
+               </property>
                <item>
                 <widget class="QPushButton" name="btnDisconn2">
-                 <property name="styleSheet">
-                  <string notr="true">padding: 3px; font-size: 10px; color: #000000;</string>
-                 </property>
                  <property name="text">
                   <string>Disconnect</string>
                  </property>
@@ -520,15 +1237,12 @@ QProgressBar::chunk { background-color: #3b82f6; }</string>
                </item>
                <item>
                 <widget class="QPushButton" name="btnDrop2">
-                 <property name="styleSheet">
-                  <string notr="true">padding: 3px; font-size: 10px; color: #000000;</string>
-                 </property>
                  <property name="text">
-                  <string>Drop DB Table</string>
+                  <string>Drop Table</string>
                  </property>
                  <property name="icon">
                   <iconset resource="icons.qrc">
-                   <normaloff>:/icons/icons/leaf.svg</normaloff>:/icons/icons/leaf.svg</iconset>
+                   <normaloff>:/icons/icons/trash.svg</normaloff>:/icons/icons/trash.svg</iconset>
                  </property>
                 </widget>
                </item>
@@ -536,6 +1250,109 @@ QProgressBar::chunk { background-color: #3b82f6; }</string>
              </item>
              <item>
               <spacer name="verticalSpacer">
+               <property name="orientation">
+                <enum>Qt::Orientation::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>10</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="tabPostgreSql">
+            <attribute name="icon">
+             <iconset resource="icons.qrc">
+              <normaloff>:/icons/icons/Postgresql.svg</normaloff>:/icons/icons/Postgresql.svg</iconset>
+            </attribute>
+            <attribute name="title">
+             <string>PostgreSQL</string>
+            </attribute>
+            <layout class="QVBoxLayout" name="tabPgLayout">
+             <property name="spacing">
+              <number>5</number>
+             </property>
+             <property name="leftMargin">
+              <number>8</number>
+             </property>
+             <property name="topMargin">
+              <number>8</number>
+             </property>
+             <property name="rightMargin">
+              <number>8</number>
+             </property>
+             <property name="bottomMargin">
+              <number>8</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="tabPgTitle">
+               <property name="styleSheet">
+                <string notr="true">font-size: 11px; font-weight: bold; color: #38bdf8;</string>
+               </property>
+               <property name="text">
+                <string>PostgreSQL Database Management</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="rPg1">
+               <property name="spacing">
+                <number>4</number>
+               </property>
+               <item>
+                <widget class="QLineEdit" name="iterationEditPg">
+                 <property name="text">
+                  <string>8</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="btnReqDataPg">
+                 <property name="text">
+                  <string>Request Data</string>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="icons.qrc">
+                   <normaloff>:/icons/icons/bubble.svg</normaloff>:/icons/icons/bubble.svg</iconset>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="rPg2">
+               <property name="spacing">
+                <number>4</number>
+               </property>
+               <item>
+                <widget class="QPushButton" name="btnSetIterPg">
+                 <property name="text">
+                  <string>Set Iteration</string>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="icons.qrc">
+                   <normaloff>:/icons/icons/cloud.svg</normaloff>:/icons/icons/cloud.svg</iconset>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="btnSavePg">
+                 <property name="text">
+                  <string>Save</string>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="icons.qrc">
+                   <normaloff>:/icons/icons/download.svg</normaloff>:/icons/icons/download.svg</iconset>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <spacer name="spacerPg">
                <property name="orientation">
                 <enum>Qt::Orientation::Vertical</enum>
                </property>
@@ -562,34 +1379,34 @@ QProgressBar::chunk { background-color: #3b82f6; }</string>
               <number>5</number>
              </property>
              <property name="leftMargin">
-              <number>6</number>
+              <number>8</number>
              </property>
              <property name="topMargin">
-              <number>6</number>
+              <number>8</number>
              </property>
              <property name="rightMargin">
-              <number>6</number>
+              <number>8</number>
              </property>
              <property name="bottomMargin">
-              <number>6</number>
+              <number>8</number>
              </property>
              <item>
               <widget class="QLabel" name="tabMySqlTitle">
                <property name="styleSheet">
-                <string notr="true">font-size: 11px; font-weight: bold; color: #000000;</string>
+                <string notr="true">font-size: 11px; font-weight: bold; color: #38bdf8;</string>
                </property>
                <property name="text">
-                <string>MySQL database managment</string>
+                <string>MySQL Database Management</string>
                </property>
               </widget>
              </item>
              <item>
               <layout class="QHBoxLayout" name="rMySql1">
+               <property name="spacing">
+                <number>4</number>
+               </property>
                <item>
                 <widget class="QLineEdit" name="iterationEditMySql">
-                 <property name="styleSheet">
-                  <string notr="true">padding: 3px; font-size: 11px; color: #000000;</string>
-                 </property>
                  <property name="text">
                   <string>8</string>
                  </property>
@@ -597,11 +1414,8 @@ QProgressBar::chunk { background-color: #3b82f6; }</string>
                </item>
                <item>
                 <widget class="QPushButton" name="btnReqDataMySql">
-                 <property name="styleSheet">
-                  <string notr="true">padding: 3px 6px; font-size: 11px; color: #000000;</string>
-                 </property>
                  <property name="text">
-                  <string>Request data</string>
+                  <string>Request Data</string>
                  </property>
                  <property name="icon">
                   <iconset resource="icons.qrc">
@@ -630,32 +1444,29 @@ QProgressBar::chunk { background-color: #3b82f6; }</string>
          </item>
          <item>
           <widget class="QGroupBox" name="connGroup">
-           <property name="styleSheet">
-            <string notr="true">color: rgb(0, 0, 0);</string>
-           </property>
            <property name="title">
-            <string>Connection details</string>
+            <string>SYSTEM CONNECTION</string>
            </property>
            <layout class="QVBoxLayout" name="connLayout">
             <property name="spacing">
              <number>4</number>
             </property>
             <property name="leftMargin">
-             <number>6</number>
+             <number>8</number>
             </property>
             <property name="topMargin">
-             <number>6</number>
+             <number>8</number>
             </property>
             <property name="rightMargin">
-             <number>6</number>
+             <number>8</number>
             </property>
             <property name="bottomMargin">
-             <number>6</number>
+             <number>8</number>
             </property>
             <item>
              <widget class="QLabel" name="lblIntIp">
               <property name="styleSheet">
-               <string notr="true">font-size: 10px; font-weight: normal; color: #000000;</string>
+               <string notr="true">font-size: 10px; color: #94a3b8;</string>
               </property>
               <property name="text">
                <string>Client Internal IP</string>
@@ -664,9 +1475,6 @@ QProgressBar::chunk { background-color: #3b82f6; }</string>
             </item>
             <item>
              <widget class="QLineEdit" name="internalIpEdit">
-              <property name="styleSheet">
-               <string notr="true">padding: 2px 4px; font-size: 10px; color: #000000;</string>
-              </property>
               <property name="text">
                <string>127.0.0.1</string>
               </property>
@@ -678,7 +1486,7 @@ QProgressBar::chunk { background-color: #3b82f6; }</string>
             <item>
              <widget class="QLabel" name="lblExtIp">
               <property name="styleSheet">
-               <string notr="true">font-size: 10px; font-weight: normal; color: #000000;</string>
+               <string notr="true">font-size: 10px; color: #94a3b8;</string>
               </property>
               <property name="text">
                <string>Client External IP</string>
@@ -687,9 +1495,6 @@ QProgressBar::chunk { background-color: #3b82f6; }</string>
             </item>
             <item>
              <widget class="QLineEdit" name="externalIpEdit">
-              <property name="styleSheet">
-               <string notr="true">padding: 2px 4px; font-size: 10px; color: #000000;</string>
-              </property>
               <property name="text">
                <string>192.168.10.192</string>
               </property>
@@ -701,20 +1506,17 @@ QProgressBar::chunk { background-color: #3b82f6; }</string>
             <item>
              <widget class="QLabel" name="lblStatusTitle">
               <property name="styleSheet">
-               <string notr="true">font-size: 10px; font-weight: normal; color: #000000;</string>
+               <string notr="true">font-size: 10px; color: #94a3b8;</string>
               </property>
               <property name="text">
-               <string>Status</string>
+               <string>System Status</string>
               </property>
              </widget>
             </item>
             <item>
              <widget class="QLabel" name="statusLabel">
-              <property name="styleSheet">
-               <string notr="true">background: #e8f5e9; color: #000000; border: 1px solid #a5d6a7; border-radius: 2px; padding: 3px; font-weight: bold; font-size: 10px;</string>
-              </property>
               <property name="text">
-               <string>Online</string>
+               <string>● ONLINE</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -722,33 +1524,44 @@ QProgressBar::chunk { background-color: #3b82f6; }</string>
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="btnHelpDesk">
-              <property name="styleSheet">
-               <string notr="true">padding: 4px; font-size: 10px; color: #000000;</string>
+             <widget class="QPushButton" name="btnLiveFeed">
+              <property name="toolTip">
+               <string>Toggle Live Video Feed Active / Paused</string>
               </property>
               <property name="text">
+               <string>Live Stream: ON</string>
+              </property>
+              <property name="icon">
+               <iconset resource="icons.qrc">
+                <normaloff>:/icons/icons/power-switch.svg</normaloff>:/icons/icons/power-switch.svg</iconset>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btnHelpDesk">
+              <property name="text">
                <string>Online HelpDesk</string>
+              </property>
+              <property name="icon">
+               <iconset resource="icons.qrc">
+                <normaloff>:/icons/icons/question-circle.svg</normaloff>:/icons/icons/question-circle.svg</iconset>
               </property>
              </widget>
             </item>
             <item>
              <widget class="QPushButton" name="btnAccount">
-              <property name="styleSheet">
-               <string notr="true">padding: 4px; font-size: 10px; color: #000000;</string>
-              </property>
               <property name="text">
                <string>My Account</string>
               </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="btnLiveFeed">
-              <property name="styleSheet">
-               <string notr="true">padding: 4px; font-size: 10px;
-color: rgb(0, 0, 0);</string>
-              </property>
-              <property name="text">
-               <string>Live Feed</string>
+              <property name="icon">
+               <iconset resource="icons.qrc">
+                <normaloff>:/icons/icons/lock.svg</normaloff>:/icons/icons/lock.svg</iconset>
               </property>
              </widget>
             </item>
@@ -760,18 +1573,15 @@ color: rgb(0, 0, 0);</string>
               <property name="sizeHint" stdset="0">
                <size>
                 <width>20</width>
-                <height>40</height>
+                <height>10</height>
                </size>
               </property>
              </spacer>
             </item>
             <item>
              <widget class="QPushButton" name="btnExit">
-              <property name="styleSheet">
-               <string notr="true">color: rgb(0, 0, 0);</string>
-              </property>
               <property name="text">
-               <string>Exit</string>
+               <string>Exit Application</string>
               </property>
               <property name="icon">
                <iconset resource="icons.qrc">
@@ -804,12 +1614,6 @@ color: rgb(0, 0, 0);</string>
    <property name="windowTitle">
     <string>MainToolbar</string>
    </property>
-   <property name="styleSheet">
-    <string notr="true">QToolBar { background: #f0f2f5; border-bottom: 1px solid #d0d4dc; spacing: 4px; padding: 2px 6px; color: #000000; }
-QToolButton { background: transparent; border: 1px solid transparent; border-radius: 3px; padding: 4px 8px; font-size: 11px; color: #000000; }
-QToolButton:hover { background: #e2e6ea; border-color: #c0c6cf; color: #000000; }
-QToolButton:pressed { background: #d0d6de; color: #000000; }</string>
-   </property>
    <property name="movable">
     <bool>false</bool>
    </property>
@@ -832,71 +1636,9 @@ QToolButton:pressed { background: #d0d6de; color: #000000; }</string>
    <addaction name="actionLiveCamera"/>
    <addaction name="separator"/>
    <addaction name="actionClearLog"/>
+   <addaction name="separator"/>
    <addaction name="actionExit"/>
   </widget>
-  <action name="actionSetIteration">
-   <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/icons/icons/cloud.svg</normaloff>:/icons/icons/cloud.svg</iconset>
-   </property>
-   <property name="text">
-    <string>Set Iteration</string>
-   </property>
-  </action>
-  <action name="actionRunQuery">
-   <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/icons/icons/rocket.svg</normaloff>:/icons/icons/rocket.svg</iconset>
-   </property>
-   <property name="text">
-    <string>Run Query</string>
-   </property>
-  </action>
-  <action name="actionRequestData">
-   <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/icons/icons/bubble.svg</normaloff>:/icons/icons/bubble.svg</iconset>
-   </property>
-   <property name="text">
-    <string>Request Data</string>
-   </property>
-  </action>
-  <action name="actionRefresh">
-   <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/icons/icons/sync.svg</normaloff>:/icons/icons/sync.svg</iconset>
-   </property>
-   <property name="text">
-    <string>Refresh</string>
-   </property>
-  </action>
-  <action name="actionDropDbTable">
-   <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/icons/icons/leaf.svg</normaloff>:/icons/icons/leaf.svg</iconset>
-   </property>
-   <property name="text">
-    <string>Drop DB Table</string>
-   </property>
-  </action>
-  <action name="actionClearLog">
-   <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/icons/icons/trash.svg</normaloff>:/icons/icons/trash.svg</iconset>
-   </property>
-   <property name="text">
-    <string>Clear Log</string>
-   </property>
-  </action>
-  <action name="actionExit">
-   <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/icons/icons/exit.svg</normaloff>:/icons/icons/exit.svg</iconset>
-   </property>
-   <property name="text">
-    <string>Exit</string>
-   </property>
-  </action>
   <action name="actionOpenVideo">
    <property name="icon">
     <iconset resource="icons.qrc">
@@ -955,6 +1697,90 @@ QToolButton:pressed { background: #d0d6de; color: #000000; }</string>
    </property>
    <property name="toolTip">
     <string>Switch back to live OBS Virtual Camera</string>
+   </property>
+  </action>
+  <action name="actionSetIteration">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/cloud.svg</normaloff>:/icons/icons/cloud.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Set Iteration</string>
+   </property>
+   <property name="toolTip">
+    <string>Apply query iteration configuration</string>
+   </property>
+  </action>
+  <action name="actionRunQuery">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/rocket.svg</normaloff>:/icons/icons/rocket.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Run Query</string>
+   </property>
+   <property name="toolTip">
+    <string>Generate sample query telemetry dataset</string>
+   </property>
+  </action>
+  <action name="actionRequestData">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/bubble.svg</normaloff>:/icons/icons/bubble.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Request Data</string>
+   </property>
+   <property name="toolTip">
+    <string>Request latest dataset from database</string>
+   </property>
+  </action>
+  <action name="actionRefresh">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/sync.svg</normaloff>:/icons/icons/sync.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Refresh</string>
+   </property>
+   <property name="toolTip">
+    <string>Refresh camera stream and system diagnostics</string>
+   </property>
+  </action>
+  <action name="actionDropDbTable">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/trash.svg</normaloff>:/icons/icons/trash.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Drop Table</string>
+   </property>
+   <property name="toolTip">
+    <string>Drop active telemetry table (requires confirmation)</string>
+   </property>
+  </action>
+  <action name="actionClearLog">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/trash.svg</normaloff>:/icons/icons/trash.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Clear Log</string>
+   </property>
+   <property name="toolTip">
+    <string>Clear terminal event log output</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/exit.svg</normaloff>:/icons/icons/exit.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Exit</string>
+   </property>
+   <property name="toolTip">
+    <string>Quit CoffeeBreak Telemetry</string>
    </property>
   </action>
  </widget>
