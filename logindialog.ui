@@ -1,0 +1,537 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>LoginDialog</class>
+ <widget class="QDialog" name="LoginDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>385</width>
+    <height>245</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>385</width>
+    <height>245</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>385</width>
+    <height>245</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>CoffeeBreak Login</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="icons.qrc">
+    <normaloff>:/icons/icons/database.svg</normaloff>:/icons/icons/database.svg</iconset>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QDialog {
+    background-color: #e4e4e4;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}</string>
+  </property>
+  <layout class="QVBoxLayout" name="mainLayout">
+   <property name="spacing">
+    <number>10</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>8</number>
+   </property>
+   <item>
+    <widget class="QWidget" name="topBar" native="true">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>26</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>26</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QWidget#topBar {
+    background-color: #8f9296;
+    border-bottom: 1px solid #7d8084;
+}</string>
+     </property>
+     <layout class="QHBoxLayout" name="topBarLayout">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="leftMargin">
+       <number>8</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="m_timeLabel">
+        <property name="styleSheet">
+         <string notr="true">color: #000000;
+font-family: 'Segoe UI', Arial, sans-serif;
+font-size: 13px;
+font-weight: normal;</string>
+        </property>
+        <property name="text">
+         <string>Sat Oct 17 2026 14:11:08</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacerTop">
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="m_helpBtn">
+        <property name="minimumSize">
+         <size>
+          <width>26</width>
+          <height>26</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>26</width>
+          <height>26</height>
+         </size>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="toolTip">
+         <string>Information &amp; Help</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+    background-color: #6fe36f;
+    border: 1px solid #489e48;
+    border-right: none;
+    color: #000000;
+    font-weight: bold;
+    font-size: 13px;
+}
+QPushButton:hover {
+    background-color: #5bd45b;
+}
+QPushButton:pressed {
+    background-color: #4ac04a;
+}</string>
+        </property>
+        <property name="text">
+         <string>?</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="m_powerBtn">
+        <property name="minimumSize">
+         <size>
+          <width>26</width>
+          <height>26</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>26</width>
+          <height>26</height>
+         </size>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="toolTip">
+         <string>Exit CoffeeBreak</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+    background-color: #ea5d5d;
+    border: 1px solid #ba3838;
+}
+QPushButton:hover {
+    background-color: #dc4b4b;
+}
+QPushButton:pressed {
+    background-color: #cb3939;
+}</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="icons.qrc">
+          <normaloff>:/icons/icons/power-switch.svg</normaloff>:/icons/icons/power-switch.svg</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>16</width>
+          <height>16</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QWidget" name="centerWrapper" native="true">
+     <layout class="QHBoxLayout" name="centerWrapperLayout">
+      <property name="leftMargin">
+       <number>14</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>14</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QFrame" name="formFrame">
+        <property name="styleSheet">
+         <string notr="true">QFrame#formFrame {
+    background-color: #ededed;
+    border: 1px solid #b8b8b8;
+    border-radius: 2px;
+}
+QLabel {
+    color: #000000;
+    font-size: 12px;
+}
+QLineEdit {
+    background-color: #ffffff;
+    border: 1px solid #999999;
+    border-radius: 2px;
+    padding: 2px 4px;
+    color: #000000;
+    font-size: 12px;
+}
+QLineEdit:focus {
+    border: 1px solid #0078d7;
+}
+QComboBox {
+    background-color: #ffffff;
+    border: 1px solid #999999;
+    border-radius: 2px;
+    padding: 2px 6px;
+    color: #000000;
+    font-size: 12px;
+}
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 20px;
+    border-left: 1px solid #c8c8c8;
+}
+QComboBox::down-arrow {
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid #444444;
+    width: 0px;
+    height: 0px;
+    margin-top: 1px;
+}
+QComboBox QAbstractItemView {
+    background-color: #ffffff;
+    color: #000000;
+    selection-background-color: #0078d7;
+    selection-color: #ffffff;
+}</string>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::Shape::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Shadow::Raised</enum>
+        </property>
+        <layout class="QGridLayout" name="gridLayout">
+         <property name="leftMargin">
+          <number>16</number>
+         </property>
+         <property name="topMargin">
+          <number>14</number>
+         </property>
+         <property name="rightMargin">
+          <number>16</number>
+         </property>
+         <property name="bottomMargin">
+          <number>12</number>
+         </property>
+         <property name="horizontalSpacing">
+          <number>10</number>
+         </property>
+         <property name="verticalSpacing">
+          <number>8</number>
+         </property>
+         <item row="0" column="0">
+          <widget class="QLabel" name="userLabel">
+           <property name="text">
+            <string>Username:</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="m_usernameEdit">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>24</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="passLabel">
+           <property name="text">
+            <string>Password:</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="m_passwordEdit">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="echoMode">
+            <enum>QLineEdit::EchoMode::Password</enum>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="dbLabel">
+           <property name="text">
+            <string>Database:</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QComboBox" name="m_databaseCombo">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>24</height>
+            </size>
+           </property>
+           <item>
+            <property name="text">
+             <string>SQLite Local DB</string>
+            </property>
+            <property name="icon">
+             <iconset resource="icons.qrc">
+              <normaloff>:/icons/icons/database.svg</normaloff>:/icons/icons/database.svg</iconset>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="3" column="0" colspan="2">
+          <layout class="QHBoxLayout" name="buttonsLayout">
+           <property name="spacing">
+            <number>8</number>
+           </property>
+           <item>
+            <spacer name="horizontalSpacerButtons">
+             <property name="orientation">
+              <enum>Qt::Orientation::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="m_cancelBtn">
+             <property name="minimumSize">
+              <size>
+               <width>86</width>
+               <height>26</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>86</width>
+               <height>26</height>
+              </size>
+             </property>
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QPushButton {
+    background-color: #fbfbfb;
+    border: 1px solid #adadad;
+    border-radius: 3px;
+    color: #000000;
+    font-size: 12px;
+}
+QPushButton:hover {
+    background-color: #e5f1fb;
+    border-color: #0078d7;
+}
+QPushButton:pressed {
+    background-color: #cce4f7;
+}</string>
+             </property>
+             <property name="text">
+              <string>Cancel</string>
+             </property>
+             <property name="icon">
+              <iconset resource="icons.qrc">
+               <normaloff>:/icons/icons/exit.svg</normaloff>:/icons/icons/exit.svg</iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>16</width>
+               <height>16</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="m_loginBtn">
+             <property name="minimumSize">
+              <size>
+               <width>86</width>
+               <height>26</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>86</width>
+               <height>26</height>
+              </size>
+             </property>
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QPushButton {
+    background-color: #fbfbfb;
+    border: 1px solid #adadad;
+    border-radius: 3px;
+    color: #000000;
+    font-size: 12px;
+}
+QPushButton:hover {
+    background-color: #e5f1fb;
+    border-color: #0078d7;
+}
+QPushButton:pressed {
+    background-color: #cce4f7;
+}</string>
+             </property>
+             <property name="text">
+              <string>Login</string>
+             </property>
+             <property name="icon">
+              <iconset resource="icons.qrc">
+               <normaloff>:/icons/icons/home.svg</normaloff>:/icons/icons/home.svg</iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>16</width>
+               <height>16</height>
+              </size>
+             </property>
+             <property name="default">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="footerLabel">
+     <property name="styleSheet">
+      <string notr="true">color: #000000;
+font-size: 11px;</string>
+     </property>
+     <property name="text">
+      <string>CoffeeBreak © 2019 | &lt;a href=&quot;https://lnrsoft.com&quot; style=&quot;color: #0078d7; text-decoration: none;&quot;&gt;LnRSoft.com&lt;/a&gt;</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignCenter</set>
+     </property>
+     <property name="openExternalLinks">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="icons.qrc"/>
+ </resources>
+ <connections/>
+</ui>
