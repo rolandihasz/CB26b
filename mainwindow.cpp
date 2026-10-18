@@ -3,13 +3,20 @@
 
 #include <QAction>
 #include <QApplication>
+#include <QComboBox>
 #include <QDateTime>
 #include <QDesktopServices>
+#include <QDir>
 #include <QFile>
+#include <QFileDialog>
+#include <QFileInfo>
 #include <QGridLayout>
 #include <QGroupBox>
 #include <QHBoxLayout>
+#include <QLabel>
 #include <QMessageBox>
+#include <QPushButton>
+#include <QSlider>
 #include <QSplitter>
 #include <QToolBar>
 #include <QUrl>
@@ -45,7 +52,7 @@ MainWindow::MainWindow(QWidget *parent)
                      "  selection-color: #00ff00;\n"
                      "}\n"));
 
-  // Build the complete interface matching the screenshot
+  // Build the complete interface matching the design
   setupUiCustom();
 
   // Setup Managers
@@ -88,21 +95,75 @@ void MainWindow::setupUiCustom() {
   m_altitudeLabel = ui->altitudeLabel;
   m_positionLabel = ui->positionLabel;
 
-  // Connect Top ToolBar Actions
-  connect(ui->actionSetIteration, &QAction::triggered, this,
-          &MainWindow::onSetIterationClicked);
-  connect(ui->actionRunQuery, &QAction::triggered, this,
-          &MainWindow::onRunQueryClicked);
-  connect(ui->actionRequestData, &QAction::triggered, this,
-          &MainWindow::onRequestDataClicked);
-  connect(ui->actionRefresh, &QAction::triggered, this,
-          &MainWindow::onRefreshClicked);
-  connect(ui->actionDropDbTable, &QAction::triggered, this,
-          &MainWindow::onDropDbTableClicked);
+  // Connect Top ToolBar Actions for Video Playback & Analysis
+  connect(ui->actionOpenVideo, &QAction::triggered, this,
+          &MainWindow::onOpenVideoClicked);
+  connect(ui->actionPlayVideo, &QAction::triggered, this,
+          &MainWindow::onPlayVideoClicked);
+  connect(ui->actionPauseVideo, &QAction::triggered, this,
+          &MainWindow::onPauseVideoClicked);
+  connect(ui->actionStopVideo, &QAction::triggered, this,
+          &MainWindow::onStopVideoClicked);
+  connect(ui->actionLiveCamera, &QAction::triggered, this,
+          &MainWindow::onLiveCameraClicked);
   connect(ui->actionClearLog, &QAction::triggered, this,
           &MainWindow::onClearLogClicked);
   connect(ui->actionExit, &QAction::triggered, this,
           &MainWindow::onExitClicked);
+
+  // Quick Load Test Gameplay Button
+  m_quickTestBtn = new QPushButton(QStringLiteral("Load Test Gameplay"), this);
+  m_quickTestBtn->setToolTip(QStringLiteral("Quick load D:\\Containers\\testdata\\pre-recorded-gameplay.mp4"));
+  m_quickTestBtn->setStyleSheet(
+      QStringLiteral("QPushButton { background-color: #1a4f80; color: #ffffff; font-weight: bold; padding: 4px 10px; border-radius: 3px; font-size: 11px; margin-right: 4px; }"
+                     "QPushButton:hover { background-color: #266cb0; color: #ffffff; }"
+                     "QPushButton:pressed { background-color: #0f3558; }"));
+  connect(m_quickTestBtn, &QPushButton::clicked, this, &MainWindow::onLoadTestGameplayClicked);
+  ui->mainToolBar->insertWidget(ui->actionClearLog, m_quickTestBtn);
+
+  // Speed Selector ComboBox
+  QLabel *speedLbl = new QLabel(QStringLiteral(" Speed: "), this);
+  speedLbl->setStyleSheet(QStringLiteral("font-size: 11px; font-weight: bold; color: #333333;"));
+  ui->mainToolBar->insertWidget(ui->actionClearLog, speedLbl);
+
+  m_speedCombo = new QComboBox(this);
+  m_speedCombo->addItems({QStringLiteral("1.0x (Normal)"), QStringLiteral("1.5x"), QStringLiteral("2.0x (Fast)"), QStringLiteral("4.0x (Turbo)")});
+  m_speedCombo->setStyleSheet(
+      QStringLiteral("QComboBox { background: #ffffff; border: 1px solid #c0c6cf; border-radius: 3px; padding: 2px 6px; font-size: 11px; color: #000000; min-width: 100px; }"
+                     "QComboBox::drop-down { border: none; }"
+                     "QComboBox QAbstractItemView { background: #ffffff; color: #000000; selection-background-color: #d0d8e4; }"));
+  connect(m_speedCombo, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &MainWindow::onSpeedChanged);
+  ui->mainToolBar->insertWidget(ui->actionClearLog, m_speedCombo);
+
+  // Video Time Slider (Seeker)
+  QLabel *timeLbl = new QLabel(QStringLiteral(" Position: "), this);
+  timeLbl->setStyleSheet(QStringLiteral("font-size: 11px; font-weight: bold; color: #333333; margin-left: 6px;"));
+  ui->mainToolBar->insertWidget(ui->actionClearLog, timeLbl);
+
+  m_timeSlider = new QSlider(Qt::Horizontal, this);
+  m_timeSlider->setRange(0, 100);
+  m_timeSlider->setValue(0);
+  m_timeSlider->setMinimumWidth(160);
+  m_timeSlider->setMaximumWidth(280);
+  m_timeSlider->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+  m_timeSlider->setStyleSheet(
+      QStringLiteral("QSlider::groove:horizontal { height: 6px; background: #c5c9d1; border-radius: 3px; }"
+                     "QSlider::sub-page:horizontal { background: #0066cc; border-radius: 3px; }"
+                     "QSlider::handle:horizontal { background: #004499; width: 14px; margin-top: -4px; margin-bottom: -4px; border-radius: 7px; border: 1px solid #ffffff; }"
+                     "QSlider::handle:horizontal:hover { background: #0077ee; }"));
+  connect(m_timeSlider, &QSlider::sliderPressed, this, [this]() { m_userIsSeeking = true; });
+  connect(m_timeSlider, &QSlider::sliderReleased, this, [this]() {
+    m_userIsSeeking = false;
+    onSliderSeek(m_timeSlider->value());
+  });
+  connect(m_timeSlider, &QSlider::sliderMoved, this, &MainWindow::onSliderSeek);
+  ui->mainToolBar->insertWidget(ui->actionClearLog, m_timeSlider);
+
+  m_timeLabel = new QLabel(QStringLiteral("00:00 / 00:00"), this);
+  m_timeLabel->setStyleSheet(QStringLiteral("font-family: 'Consolas', monospace; font-size: 11px; color: #111111; padding-left: 4px; padding-right: 10px; font-weight: bold;"));
+  ui->mainToolBar->insertWidget(ui->actionClearLog, m_timeLabel);
+
+  ui->mainToolBar->insertSeparator(ui->actionClearLog);
 
   // Connect Database Tab Buttons
   connect(ui->btnReqData, &QPushButton::clicked, this,
@@ -162,6 +223,14 @@ void MainWindow::setupConnections() {
           &MainWindow::onRoundDetected);
   connect(m_videoFeed, &VideoFeedWidget::statusMessage, this,
           &MainWindow::appendLog);
+  connect(m_videoFeed, &VideoFeedWidget::videoPositionChanged, this,
+          &MainWindow::onVideoPositionChanged);
+  connect(m_videoFeed, &VideoFeedWidget::videoDurationChanged, this,
+          &MainWindow::onVideoDurationChanged);
+  connect(m_videoFeed, &VideoFeedWidget::playbackStateChanged, this,
+          &MainWindow::onPlaybackStateChanged);
+  connect(m_videoFeed, &VideoFeedWidget::feedModeChanged, this,
+          &MainWindow::onFeedModeChanged);
 
   // Telemetry Manager
   connect(m_telemetryMgr, &TelemetryManager::logMessage, this,
@@ -200,7 +269,7 @@ void MainWindow::initializeSystem() {
   }
   if (m_classifier.loadWeights(weightsPath)) {
     appendLog(QStringLiteral(
-        "EagleEye AI Model: Loaded successfully (eagle_eye_model.pth)."));
+        "EagleEye AI Model: Loaded successfully (eagle_eye_weights.bin)."));
     appendLog(QStringLiteral(
         "EagleEye AI: Monitoring round counter region [1684, 29, 189, 130]"));
   } else {
@@ -221,7 +290,7 @@ void MainWindow::initializeSystem() {
                   .arg(roundsCsv));
   }
 
-  // 5. Connect and start OBS Virtual Camera stream
+  // 5. Connect and start OBS Virtual Camera stream as default live feed
   m_videoFeed->initCamera(QStringLiteral("OBS Virtual Camera"));
 
   // 6. Start telemetry monitoring (RTX 3090 Ti GPU & network)
@@ -284,6 +353,131 @@ void MainWindow::onIpUpdated(const QString &intIp, const QString &extIp) {
                                            : QStringLiteral("Online"));
   }
 }
+
+// ---------------------------------------------------------------------------
+// Video Playback & Analysis Slots
+// ---------------------------------------------------------------------------
+
+void MainWindow::onOpenVideoClicked() {
+  QString defaultDir = QStringLiteral("D:/Containers/testdata");
+  if (!QDir(defaultDir).exists()) {
+    defaultDir = QDir::currentPath();
+  }
+
+  QString filePath = QFileDialog::getOpenFileName(
+      this, tr("Open Pre-Recorded Gameplay Video"), defaultDir,
+      tr("Video Files (*.mp4 *.mkv *.avi *.mov *.webm);;All Files (*.*)"));
+
+  if (!filePath.isEmpty()) {
+    // Clear previous round records in lap time chart to analyze new run freshly
+    m_lapTimeChart->clearData();
+    if (m_videoFeed->openVideoFile(filePath)) {
+      m_videoFeed->play();
+      appendLog(QStringLiteral("Run Analysis Started: Loaded gameplay file %1")
+                    .arg(filePath));
+    }
+  }
+}
+
+void MainWindow::onLoadTestGameplayClicked() {
+  QString testFile = QStringLiteral("D:/Containers/testdata/pre-recorded-gameplay.mp4");
+  if (!QFile::exists(testFile)) {
+    testFile = QStringLiteral("pre-recorded-gameplay.mp4");
+  }
+
+  if (!QFile::exists(testFile)) {
+    QMessageBox::warning(this, tr("Test Video Not Found"),
+                         tr("Could not find test video at:\nD:\\Containers\\testdata\\pre-recorded-gameplay.mp4\n\nPlease use Open Video to locate the file."));
+    onOpenVideoClicked();
+    return;
+  }
+
+  // Clear previous run records for fresh analysis
+  m_lapTimeChart->clearData();
+  if (m_videoFeed->openVideoFile(testFile)) {
+    m_videoFeed->play();
+    appendLog(QStringLiteral("Run Analysis Started: Loaded test gameplay %1").arg(testFile));
+  }
+}
+
+void MainWindow::onPlayVideoClicked() {
+  if (!m_videoFeed->isVideoFileLoaded()) {
+    onOpenVideoClicked();
+    return;
+  }
+  m_videoFeed->play();
+}
+
+void MainWindow::onPauseVideoClicked() {
+  m_videoFeed->pause();
+}
+
+void MainWindow::onStopVideoClicked() {
+  m_videoFeed->stop();
+}
+
+void MainWindow::onLiveCameraClicked() {
+  appendLog(QStringLiteral("Switching video feed back to OBS Virtual Camera (Live stream)..."));
+  m_videoFeed->switchToLiveCamera();
+}
+
+void MainWindow::onSpeedChanged(int index) {
+  qreal rate = 1.0;
+  switch (index) {
+  case 0: rate = 1.0; break;
+  case 1: rate = 1.5; break;
+  case 2: rate = 2.0; break;
+  case 3: rate = 4.0; break;
+  default: rate = 1.0; break;
+  }
+  m_videoFeed->setPlaybackRate(rate);
+}
+
+void MainWindow::onSliderSeek(int pos) {
+  m_videoFeed->seek(pos);
+}
+
+void MainWindow::onVideoPositionChanged(qint64 posMs, qint64 durMs) {
+  if (!m_userIsSeeking && m_timeSlider) {
+    m_timeSlider->blockSignals(true);
+    m_timeSlider->setValue(static_cast<int>(posMs));
+    m_timeSlider->blockSignals(false);
+  }
+
+  if (m_timeLabel) {
+    int curSec = static_cast<int>(posMs / 1000);
+    int totSec = static_cast<int>(durMs / 1000);
+    m_timeLabel->setText(QString::asprintf("%02d:%02d / %02d:%02d",
+                                          curSec / 60, curSec % 60,
+                                          totSec / 60, totSec % 60));
+  }
+}
+
+void MainWindow::onVideoDurationChanged(qint64 durMs) {
+  if (m_timeSlider) {
+    m_timeSlider->setRange(0, static_cast<int>(durMs));
+  }
+}
+
+void MainWindow::onPlaybackStateChanged(bool isPlaying) {
+  Q_UNUSED(isPlaying);
+}
+
+void MainWindow::onFeedModeChanged(bool isLiveCamera) {
+  if (m_timeSlider) {
+    m_timeSlider->setEnabled(!isLiveCamera);
+  }
+  if (m_speedCombo) {
+    m_speedCombo->setEnabled(!isLiveCamera);
+  }
+  if (m_timeLabel) {
+    m_timeLabel->setText(isLiveCamera ? QStringLiteral("LIVE FEED") : QStringLiteral("00:00 / 00:00"));
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Database & Utility Slots
+// ---------------------------------------------------------------------------
 
 void MainWindow::onSetIterationClicked() {
   bool ok = false;

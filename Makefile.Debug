@@ -156,11 +156,14 @@ debug/qrc_icons.cpp: icons.qrc \
 		icons/undo.svg \
 		icons/Mysql+.svg \
 		icons/redo.svg \
+		icons/play.svg \
 		icons/lock.svg \
 		icons/database.svg \
 		icons/pie-chart.svg \
 		icons/database.ico \
+		icons/pause.svg \
 		icons/trash.svg \
+		icons/folder-open.svg \
 		icons/rocket.svg \
 		icons/databases_tr.png \
 		icons/exit.svg \
@@ -174,6 +177,7 @@ debug/qrc_icons.cpp: icons.qrc \
 		icons/sqlite.png \
 		icons/tablet.svg \
 		icons/postgres-hr.png \
+		icons/camera.svg \
 		icons/construction.svg \
 		icons/dbs_postgresql.ico \
 		icons/question-circle.svg \
@@ -191,6 +195,7 @@ debug/qrc_icons.cpp: icons.qrc \
 		icons/bubble.svg \
 		icons/heart.svg \
 		icons/postgres.png \
+		icons/stop.svg \
 		icons/arrow-right.svg \
 		icons/sync.svg \
 		icons/arrow-left.svg \
@@ -207,8 +212,8 @@ compiler_moc_header_make_all: debug/moc_mainwindow.cpp debug/moc_laptimechart.cp
 compiler_moc_header_clean:
 	-$(DEL_FILE) debug\moc_mainwindow.cpp debug\moc_laptimechart.cpp debug\moc_signalchart.cpp debug\moc_wavepacketchart.cpp debug\moc_videofeedwidget.cpp debug\moc_telemetrymanager.cpp debug\moc_databasemanager.cpp debug\moc_logindialog.cpp
 debug/moc_mainwindow.cpp: mainwindow.h \
-		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QLabel \
-		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qlabel.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QComboBox \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qcombobox.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qtwidgetsglobal.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/qtguiglobal.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qglobal.h \
@@ -262,7 +267,6 @@ debug/moc_mainwindow.cpp: mainwindow.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/qtguiexports.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qtwidgets-config.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qtwidgetsexports.h \
-		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qframe.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qwidget.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/qwindowdefs.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qobjectdefs.h \
@@ -409,6 +413,21 @@ debug/moc_mainwindow.cpp: mainwindow.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/qinputmethod.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qlocale.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/qguiapplication_platform.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qabstractitemdelegate.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qstyleoption.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qabstractspinbox.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/qvalidator.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qregularexpression.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qslider.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qabstractslider.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qstyle.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qtabbar.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qtabwidget.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qrubberband.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qframe.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qabstractitemmodel.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QLabel \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qlabel.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/qpicture.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/qtextdocument.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QLineEdit \
@@ -419,7 +438,6 @@ debug/moc_mainwindow.cpp: mainwindow.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/qtextoption.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QMainWindow \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qmainwindow.h \
-		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qtabwidget.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QPlainTextEdit \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qplaintextedit.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qtextedit.h \
@@ -434,6 +452,7 @@ debug/moc_mainwindow.cpp: mainwindow.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QPushButton \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qpushbutton.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qabstractbutton.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QSlider \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QTabWidget \
 		databasemanager.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtSql/QSqlDatabase \
@@ -446,7 +465,6 @@ debug/moc_mainwindow.cpp: mainwindow.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtSql/qsqlquery.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtSql/QSqlQueryModel \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtSql/qsqlquerymodel.h \
-		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qabstractitemmodel.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/QDateTime \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qdatetime.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qcalendar.h \
@@ -504,10 +522,21 @@ debug/moc_mainwindow.cpp: mainwindow.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qvideoframeformat.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/QMediaCaptureSession \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qmediacapturesession.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/QMediaPlayer \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qmediaplayer.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qtaudio.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qaudio.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/QAudioOutput \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qaudiooutput.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/QVideoSink \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qvideosink.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/QVideoFrame \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/QMutex \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/QFileInfo \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qfileinfo.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qfile.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qfiledevice.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qtimezone.h \
 		wavepacketchart.h \
 		debug/moc_predefs.h \
 		F:/Qt/6.11.2/llvm-mingw_64/bin/moc.exe
@@ -1352,6 +1381,12 @@ debug/moc_videofeedwidget.cpp: videofeedwidget.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qvideoframeformat.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/QMediaCaptureSession \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qmediacapturesession.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/QMediaPlayer \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qmediaplayer.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qtaudio.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qaudio.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/QAudioOutput \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qaudiooutput.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/QVideoSink \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qvideosink.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/QVideoFrame \
@@ -1360,6 +1395,13 @@ debug/moc_videofeedwidget.cpp: videofeedwidget.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/QElapsedTimer \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qelapsedtimer.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/QMutex \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/QFileInfo \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qfileinfo.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qfile.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qfiledevice.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qdatetime.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qcalendar.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qtimezone.h \
 		eagleeye_classifier.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/QString \
 		debug/moc_predefs.h \
@@ -2119,6 +2161,12 @@ ui_mainwindow.h: mainwindow.ui \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qvideoframeformat.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/QMediaCaptureSession \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qmediacapturesession.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/QMediaPlayer \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qmediaplayer.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qtaudio.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qaudio.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/QAudioOutput \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qaudiooutput.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/QVideoSink \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qvideosink.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/QVideoFrame \
@@ -2127,6 +2175,13 @@ ui_mainwindow.h: mainwindow.ui \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/QElapsedTimer \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qelapsedtimer.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/QMutex \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/QFileInfo \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qfileinfo.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qfile.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qfiledevice.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qdatetime.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qcalendar.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qtimezone.h \
 		eagleeye_classifier.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/QString \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QWidget \
@@ -2759,8 +2814,8 @@ compiler_clean: compiler_rcc_clean compiler_moc_predefs_clean compiler_moc_heade
 ####### Compile
 
 debug/main.o: main.cpp mainwindow.h \
-		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QLabel \
-		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qlabel.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QComboBox \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qcombobox.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qtwidgetsglobal.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/qtguiglobal.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qglobal.h \
@@ -2814,7 +2869,6 @@ debug/main.o: main.cpp mainwindow.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/qtguiexports.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qtwidgets-config.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qtwidgetsexports.h \
-		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qframe.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qwidget.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/qwindowdefs.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qobjectdefs.h \
@@ -2961,6 +3015,21 @@ debug/main.o: main.cpp mainwindow.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/qinputmethod.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qlocale.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/qguiapplication_platform.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qabstractitemdelegate.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qstyleoption.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qabstractspinbox.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/qvalidator.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qregularexpression.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qslider.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qabstractslider.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qstyle.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qtabbar.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qtabwidget.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qrubberband.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qframe.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qabstractitemmodel.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QLabel \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qlabel.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/qpicture.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/qtextdocument.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QLineEdit \
@@ -2971,7 +3040,6 @@ debug/main.o: main.cpp mainwindow.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/qtextoption.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QMainWindow \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qmainwindow.h \
-		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qtabwidget.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QPlainTextEdit \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qplaintextedit.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qtextedit.h \
@@ -2986,6 +3054,7 @@ debug/main.o: main.cpp mainwindow.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QPushButton \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qpushbutton.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qabstractbutton.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QSlider \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QTabWidget \
 		databasemanager.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtSql/QSqlDatabase \
@@ -2998,7 +3067,6 @@ debug/main.o: main.cpp mainwindow.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtSql/qsqlquery.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtSql/QSqlQueryModel \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtSql/qsqlquerymodel.h \
-		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qabstractitemmodel.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/QDateTime \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qdatetime.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qcalendar.h \
@@ -3056,10 +3124,21 @@ debug/main.o: main.cpp mainwindow.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qvideoframeformat.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/QMediaCaptureSession \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qmediacapturesession.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/QMediaPlayer \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qmediaplayer.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qtaudio.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qaudio.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/QAudioOutput \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qaudiooutput.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/QVideoSink \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qvideosink.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/QVideoFrame \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/QMutex \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/QFileInfo \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qfileinfo.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qfile.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qfiledevice.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qtimezone.h \
 		wavepacketchart.h \
 		logindialog.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QDialog \
@@ -3072,8 +3151,8 @@ debug/main.o: main.cpp mainwindow.h \
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\main.o main.cpp
 
 debug/mainwindow.o: mainwindow.cpp mainwindow.h \
-		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QLabel \
-		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qlabel.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QComboBox \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qcombobox.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qtwidgetsglobal.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/qtguiglobal.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qglobal.h \
@@ -3127,7 +3206,6 @@ debug/mainwindow.o: mainwindow.cpp mainwindow.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/qtguiexports.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qtwidgets-config.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qtwidgetsexports.h \
-		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qframe.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qwidget.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/qwindowdefs.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qobjectdefs.h \
@@ -3274,6 +3352,21 @@ debug/mainwindow.o: mainwindow.cpp mainwindow.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/qinputmethod.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qlocale.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/qguiapplication_platform.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qabstractitemdelegate.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qstyleoption.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qabstractspinbox.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/qvalidator.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qregularexpression.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qslider.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qabstractslider.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qstyle.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qtabbar.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qtabwidget.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qrubberband.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qframe.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qabstractitemmodel.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QLabel \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qlabel.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/qpicture.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/qtextdocument.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QLineEdit \
@@ -3284,7 +3377,6 @@ debug/mainwindow.o: mainwindow.cpp mainwindow.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/qtextoption.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QMainWindow \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qmainwindow.h \
-		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qtabwidget.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QPlainTextEdit \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qplaintextedit.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qtextedit.h \
@@ -3299,6 +3391,7 @@ debug/mainwindow.o: mainwindow.cpp mainwindow.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QPushButton \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qpushbutton.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qabstractbutton.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QSlider \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QTabWidget \
 		databasemanager.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtSql/QSqlDatabase \
@@ -3311,7 +3404,6 @@ debug/mainwindow.o: mainwindow.cpp mainwindow.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtSql/qsqlquery.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtSql/QSqlQueryModel \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtSql/qsqlquerymodel.h \
-		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qabstractitemmodel.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/QDateTime \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qdatetime.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qcalendar.h \
@@ -3369,10 +3461,21 @@ debug/mainwindow.o: mainwindow.cpp mainwindow.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qvideoframeformat.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/QMediaCaptureSession \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qmediacapturesession.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/QMediaPlayer \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qmediaplayer.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qtaudio.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qaudio.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/QAudioOutput \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qaudiooutput.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/QVideoSink \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qvideosink.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/QVideoFrame \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/QMutex \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/QFileInfo \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qfileinfo.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qfile.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qfiledevice.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qtimezone.h \
 		wavepacketchart.h \
 		ui_mainwindow.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/QAction \
@@ -3399,13 +3502,16 @@ debug/mainwindow.o: mainwindow.cpp mainwindow.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QVBoxLayout \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/QDesktopServices \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/qdesktopservices.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/QDir \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qdir.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qdirlisting.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/QFile \
-		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qfile.h \
-		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qfiledevice.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QFileDialog \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qfiledialog.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qdialog.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QGridLayout \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QMessageBox \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qmessagebox.h \
-		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qdialog.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qdialogbuttonbox.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\mainwindow.o mainwindow.cpp
 
@@ -4424,6 +4530,12 @@ debug/videofeedwidget.o: videofeedwidget.cpp videofeedwidget.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qvideoframeformat.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/QMediaCaptureSession \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qmediacapturesession.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/QMediaPlayer \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qmediaplayer.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qtaudio.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qaudio.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/QAudioOutput \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qaudiooutput.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/QVideoSink \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/qvideosink.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtMultimedia/QVideoFrame \
@@ -4432,6 +4544,13 @@ debug/videofeedwidget.o: videofeedwidget.cpp videofeedwidget.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/QElapsedTimer \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qelapsedtimer.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/QMutex \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/QFileInfo \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qfileinfo.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qfile.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qfiledevice.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qdatetime.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qcalendar.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qtimezone.h \
 		eagleeye_classifier.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/QString \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/QPainter \
@@ -4446,6 +4565,11 @@ debug/videofeedwidget.o: videofeedwidget.cpp videofeedwidget.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QMenu \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qmenu.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/QContextMenuEvent \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QFileDialog \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qfiledialog.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qdir.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qdirlisting.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qdialog.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/QDebug
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\videofeedwidget.o videofeedwidget.cpp
 
@@ -5044,6 +5168,48 @@ debug/logindialog.o: logindialog.cpp logindialog.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/QTimer \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qtimer.h \
 		ui_logindialog.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/QVariant \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/QIcon \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QApplication \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qapplication.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QComboBox \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qcombobox.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qabstractitemdelegate.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qstyleoption.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qabstractspinbox.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/qvalidator.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qregularexpression.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qslider.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qabstractslider.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qstyle.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qtabbar.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qtabwidget.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qrubberband.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qframe.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qabstractitemmodel.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QFrame \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QGridLayout \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qgridlayout.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qlayout.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qlayoutitem.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qboxlayout.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QHBoxLayout \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QLabel \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qlabel.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/qpicture.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/qtextdocument.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QLineEdit \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qlineedit.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/qtextcursor.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/qtextformat.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/qpen.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtGui/qtextoption.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QPushButton \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qpushbutton.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/qabstractbutton.h \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QSpacerItem \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QVBoxLayout \
+		F:/Qt/6.11.2/llvm-mingw_64/include/QtWidgets/QWidget \
 		databasemanager.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtSql/QSqlDatabase \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtSql/qsqldatabase.h \
@@ -5055,7 +5221,6 @@ debug/logindialog.o: logindialog.cpp logindialog.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtSql/qsqlquery.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtSql/QSqlQueryModel \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtSql/qsqlquerymodel.h \
-		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qabstractitemmodel.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/QDateTime \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qdatetime.h \
 		F:/Qt/6.11.2/llvm-mingw_64/include/QtCore/qcalendar.h \

@@ -825,11 +825,12 @@ QToolButton:pressed { background: #d0d6de; color: #000000; }</string>
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actionSetIteration"/>
-   <addaction name="actionRunQuery"/>
-   <addaction name="actionRequestData"/>
-   <addaction name="actionRefresh"/>
-   <addaction name="actionDropDbTable"/>
+   <addaction name="actionOpenVideo"/>
+   <addaction name="actionPlayVideo"/>
+   <addaction name="actionPauseVideo"/>
+   <addaction name="actionStopVideo"/>
+   <addaction name="actionLiveCamera"/>
+   <addaction name="separator"/>
    <addaction name="actionClearLog"/>
    <addaction name="actionExit"/>
   </widget>
@@ -894,6 +895,66 @@ QToolButton:pressed { background: #d0d6de; color: #000000; }</string>
    </property>
    <property name="text">
     <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionOpenVideo">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/folder-open.svg</normaloff>:/icons/icons/folder-open.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Open Video</string>
+   </property>
+   <property name="toolTip">
+    <string>Open pre-recorded gameplay video file</string>
+   </property>
+  </action>
+  <action name="actionPlayVideo">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/play.svg</normaloff>:/icons/icons/play.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Play</string>
+   </property>
+   <property name="toolTip">
+    <string>Play video &amp; analyse gameplay run</string>
+   </property>
+  </action>
+  <action name="actionPauseVideo">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/pause.svg</normaloff>:/icons/icons/pause.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Pause</string>
+   </property>
+   <property name="toolTip">
+    <string>Pause video playback</string>
+   </property>
+  </action>
+  <action name="actionStopVideo">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/stop.svg</normaloff>:/icons/icons/stop.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Stop</string>
+   </property>
+   <property name="toolTip">
+    <string>Stop playback and reset to start</string>
+   </property>
+  </action>
+  <action name="actionLiveCamera">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/camera.svg</normaloff>:/icons/icons/camera.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Live Stream</string>
+   </property>
+   <property name="toolTip">
+    <string>Switch back to live OBS Virtual Camera</string>
    </property>
   </action>
  </widget>

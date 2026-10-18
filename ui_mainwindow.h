@@ -46,6 +46,11 @@ public:
     QAction *actionDropDbTable;
     QAction *actionClearLog;
     QAction *actionExit;
+    QAction *actionOpenVideo;
+    QAction *actionPlayVideo;
+    QAction *actionPauseVideo;
+    QAction *actionStopVideo;
+    QAction *actionLiveCamera;
     QWidget *centralwidget;
     QVBoxLayout *mainVBox;
     QSplitter *vSplitter;
@@ -166,6 +171,31 @@ public:
         QIcon icon7;
         icon7.addFile(QString::fromUtf8(":/icons/icons/exit.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
         actionExit->setIcon(icon7);
+        actionOpenVideo = new QAction(MainWindow);
+        actionOpenVideo->setObjectName("actionOpenVideo");
+        QIcon icon8;
+        icon8.addFile(QString::fromUtf8(":/icons/icons/folder-open.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        actionOpenVideo->setIcon(icon8);
+        actionPlayVideo = new QAction(MainWindow);
+        actionPlayVideo->setObjectName("actionPlayVideo");
+        QIcon icon9;
+        icon9.addFile(QString::fromUtf8(":/icons/icons/play.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        actionPlayVideo->setIcon(icon9);
+        actionPauseVideo = new QAction(MainWindow);
+        actionPauseVideo->setObjectName("actionPauseVideo");
+        QIcon icon10;
+        icon10.addFile(QString::fromUtf8(":/icons/icons/pause.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        actionPauseVideo->setIcon(icon10);
+        actionStopVideo = new QAction(MainWindow);
+        actionStopVideo->setObjectName("actionStopVideo");
+        QIcon icon11;
+        icon11.addFile(QString::fromUtf8(":/icons/icons/stop.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        actionStopVideo->setIcon(icon11);
+        actionLiveCamera = new QAction(MainWindow);
+        actionLiveCamera->setObjectName("actionLiveCamera");
+        QIcon icon12;
+        icon12.addFile(QString::fromUtf8(":/icons/icons/camera.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        actionLiveCamera->setIcon(icon12);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName("centralwidget");
         mainVBox = new QVBoxLayout(centralwidget);
@@ -310,9 +340,9 @@ public:
 
         tabPgLayout->addItem(spacerPg);
 
-        QIcon icon8;
-        icon8.addFile(QString::fromUtf8(":/icons/icons/Postgresql.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
-        dbTabs->addTab(tabPostgreSql, icon8, QString());
+        QIcon icon13;
+        icon13.addFile(QString::fromUtf8(":/icons/icons/Postgresql.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        dbTabs->addTab(tabPostgreSql, icon13, QString());
         tabSqlite = new QWidget();
         tabSqlite->setObjectName("tabSqlite");
         tabSqliteLayout = new QVBoxLayout(tabSqlite);
@@ -372,9 +402,9 @@ public:
         btnPlotData = new QPushButton(tabSqlite);
         btnPlotData->setObjectName("btnPlotData");
         btnPlotData->setStyleSheet(QString::fromUtf8("padding: 3px 6px; font-size: 11px; color: #000000;"));
-        QIcon icon9;
-        icon9.addFile(QString::fromUtf8(":/icons/icons/chart-bars.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
-        btnPlotData->setIcon(icon9);
+        QIcon icon14;
+        icon14.addFile(QString::fromUtf8(":/icons/icons/chart-bars.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        btnPlotData->setIcon(icon14);
 
         r3->addWidget(btnPlotData);
 
@@ -460,9 +490,9 @@ public:
 
         tabSqliteLayout->addItem(verticalSpacer);
 
-        QIcon icon10;
-        icon10.addFile(QString::fromUtf8(":/icons/icons/sqlite_icon.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
-        dbTabs->addTab(tabSqlite, icon10, QString());
+        QIcon icon15;
+        icon15.addFile(QString::fromUtf8(":/icons/icons/sqlite_icon.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        dbTabs->addTab(tabSqlite, icon15, QString());
         tabMySql = new QWidget();
         tabMySql->setObjectName("tabMySql");
         tabMySqlLayout = new QVBoxLayout(tabMySql);
@@ -497,9 +527,9 @@ public:
 
         tabMySqlLayout->addItem(spacerMySql);
 
-        QIcon icon11;
-        icon11.addFile(QString::fromUtf8(":/icons/icons/Mysql_app.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
-        dbTabs->addTab(tabMySql, icon11, QString());
+        QIcon icon16;
+        icon16.addFile(QString::fromUtf8(":/icons/icons/Mysql_app.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        dbTabs->addTab(tabMySql, icon16, QString());
 
         rightPanelHBox->addWidget(dbTabs);
 
@@ -606,11 +636,12 @@ public:
         mainToolBar->setFloatable(false);
         MainWindow->addToolBar(Qt::ToolBarArea::TopToolBarArea, mainToolBar);
 
-        mainToolBar->addAction(actionSetIteration);
-        mainToolBar->addAction(actionRunQuery);
-        mainToolBar->addAction(actionRequestData);
-        mainToolBar->addAction(actionRefresh);
-        mainToolBar->addAction(actionDropDbTable);
+        mainToolBar->addAction(actionOpenVideo);
+        mainToolBar->addAction(actionPlayVideo);
+        mainToolBar->addAction(actionPauseVideo);
+        mainToolBar->addAction(actionStopVideo);
+        mainToolBar->addAction(actionLiveCamera);
+        mainToolBar->addSeparator();
         mainToolBar->addAction(actionClearLog);
         mainToolBar->addAction(actionExit);
 
@@ -632,6 +663,26 @@ public:
         actionDropDbTable->setText(QCoreApplication::translate("MainWindow", "Drop DB Table", nullptr));
         actionClearLog->setText(QCoreApplication::translate("MainWindow", "Clear Log", nullptr));
         actionExit->setText(QCoreApplication::translate("MainWindow", "Exit", nullptr));
+        actionOpenVideo->setText(QCoreApplication::translate("MainWindow", "Open Video", nullptr));
+#if QT_CONFIG(tooltip)
+        actionOpenVideo->setToolTip(QCoreApplication::translate("MainWindow", "Open pre-recorded gameplay video file", nullptr));
+#endif // QT_CONFIG(tooltip)
+        actionPlayVideo->setText(QCoreApplication::translate("MainWindow", "Play", nullptr));
+#if QT_CONFIG(tooltip)
+        actionPlayVideo->setToolTip(QCoreApplication::translate("MainWindow", "Play video & analyse gameplay run", nullptr));
+#endif // QT_CONFIG(tooltip)
+        actionPauseVideo->setText(QCoreApplication::translate("MainWindow", "Pause", nullptr));
+#if QT_CONFIG(tooltip)
+        actionPauseVideo->setToolTip(QCoreApplication::translate("MainWindow", "Pause video playback", nullptr));
+#endif // QT_CONFIG(tooltip)
+        actionStopVideo->setText(QCoreApplication::translate("MainWindow", "Stop", nullptr));
+#if QT_CONFIG(tooltip)
+        actionStopVideo->setToolTip(QCoreApplication::translate("MainWindow", "Stop playback and reset to start", nullptr));
+#endif // QT_CONFIG(tooltip)
+        actionLiveCamera->setText(QCoreApplication::translate("MainWindow", "Live Stream", nullptr));
+#if QT_CONFIG(tooltip)
+        actionLiveCamera->setToolTip(QCoreApplication::translate("MainWindow", "Switch back to live OBS Virtual Camera", nullptr));
+#endif // QT_CONFIG(tooltip)
         eventLogHeader->setText(QCoreApplication::translate("MainWindow", "Event log", nullptr));
         tabPgTitle->setText(QCoreApplication::translate("MainWindow", "PostgreSQL database managment", nullptr));
         iterationEditPg->setText(QCoreApplication::translate("MainWindow", "8", nullptr));

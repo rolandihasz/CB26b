@@ -1,12 +1,14 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QComboBox>
 #include <QLabel>
 #include <QLineEdit>
 #include <QMainWindow>
 #include <QPlainTextEdit>
 #include <QProgressBar>
 #include <QPushButton>
+#include <QSlider>
 #include <QTabWidget>
 
 #include "databasemanager.h"
@@ -37,7 +39,21 @@ private slots:
   void onGpuUpdated(const GpuStats &stats);
   void onIpUpdated(const QString &intIp, const QString &extIp);
 
-  // Toolbar & action slots matching screenshot
+  // Video playback & analysis toolbar slots
+  void onOpenVideoClicked();
+  void onPlayVideoClicked();
+  void onPauseVideoClicked();
+  void onStopVideoClicked();
+  void onLiveCameraClicked();
+  void onSpeedChanged(int index);
+  void onSliderSeek(int pos);
+  void onVideoPositionChanged(qint64 posMs, qint64 durMs);
+  void onVideoDurationChanged(qint64 durMs);
+  void onPlaybackStateChanged(bool isPlaying);
+  void onFeedModeChanged(bool isLiveCamera);
+  void onLoadTestGameplayClicked();
+
+  // Database Tab & existing action slots
   void onSetIterationClicked();
   void onRunQueryClicked();
   void onRequestDataClicked();
@@ -68,6 +84,13 @@ private:
 
   TelemetryManager *m_telemetryMgr = nullptr;
   DatabaseManager *m_databaseMgr = nullptr;
+
+  // Video Playback UI Toolbar Controls
+  QSlider *m_timeSlider = nullptr;
+  QLabel *m_timeLabel = nullptr;
+  QComboBox *m_speedCombo = nullptr;
+  QPushButton *m_quickTestBtn = nullptr;
+  bool m_userIsSeeking = false;
 
   // UI Widgets
   QPlainTextEdit *m_eventLogView = nullptr;

@@ -7,6 +7,7 @@
 #include <QGuiApplication>
 #include <QMenu>
 #include <QContextMenuEvent>
+#include <QFileDialog>
 #include <QDebug>
 #include <cmath>
 
@@ -23,10 +24,37 @@ VideoFeedWidget::VideoFeedWidget(QWidget *parent)
     m_captureSession = new QMediaCaptureSession(this);
     m_captureSession->setVideoSink(m_videoSink);
 
+    // Setup Video Player for pre-recorded gameplay analysis
+    m_player = new QMediaPlayer(this);
+    m_audioOutput = new QAudioOutput(this);
+    m_audioOutput->setVolume(0.5f);
+    m_player->setAudioOutput(m_audioOutput);
+
+    connect(m_player, &QMediaPlayer::positionChanged, this, [this](qint64 pos) {
+        m_videoPositionMs = pos;
+        emit videoPositionChanged(pos, m_videoDurationMs);
+        update();
+    });
+
+    connect(m_player, &QMediaPlayer::durationChanged, this, [this](qint64 dur) {
+        m_videoDurationMs = dur;
+        emit videoDurationChanged(dur);
+    });
+
+    connect(m_player, &QMediaPlayer::playbackStateChanged, this, [this](QMediaPlayer::PlaybackState state) {
+        emit playbackStateChanged(state == QMediaPlayer::PlayingState);
+        update();
+    });
+
+    connect(m_player, &QMediaPlayer::errorOccurred, this, [this](QMediaPlayer::Error error, const QString &errorString) {
+        Q_UNUSED(error);
+        emit statusMessage(QStringLiteral("Media player error: %1").arg(errorString));
+    });
+
     m_fpsTimer.start();
     m_lapTimer.start();
 
-    // AI Inference timer (run 3 times per second)
+    // AI Inference timer (run ~3 times per second at 1x)
     connect(&m_inferenceTimer, &QTimer::timeout, this, &VideoFeedWidget::onInferenceTimer);
     m_inferenceTimer.start(350);
 
@@ -47,6 +75,9 @@ VideoFeedWidget::~VideoFeedWidget()
     m_blinkTimer.stop();
     m_fallbackTimer.stop();
 
+    if (m_player) {
+        m_player->stop();
+    }
     if (m_camera) {
         m_camera->stop();
     }
@@ -64,6 +95,12 @@ void VideoFeedWidget::setEagleEyeClassifier(EagleEyeClassifier *classifier)
 
 bool VideoFeedWidget::initCamera(const QString &preferredDeviceName)
 {
+    if (m_player) {
+        m_player->stop();
+    }
+    m_feedMode = FeedMode::LiveCamera;
+    m_captureSession->setVideoSink(m_videoSink);
+
     const QList<QCameraDevice> cameras = QMediaDevices::videoInputs();
     if (cameras.isEmpty()) {
         emit statusMessage(QStringLiteral("No camera devices detected. Starting screen capture fallback..."));
@@ -100,7 +137,104 @@ bool VideoFeedWidget::initCamera(const QString &preferredDeviceName)
     emit statusMessage(QStringLiteral("Camera active: %1 (Preferred: %2)")
                        .arg(selectedDevice.description())
                        .arg(foundPreferred ? QStringLiteral("Yes") : QStringLiteral("No (using default)")));
+    emit feedModeChanged(true);
     return true;
+}
+
+bool VideoFeedWidget::openVideoFile(const QString &filePath)
+{
+    if (filePath.isEmpty() || !QFile::exists(filePath)) {
+        emit statusMessage(QStringLiteral("Video file does not exist: %1").arg(filePath));
+        return false;
+    }
+
+    if (m_camera) {
+        m_camera->stop();
+    }
+    m_fallbackTimer.stop();
+    m_cameraActive = false;
+    m_feedMode = FeedMode::VideoFile;
+
+    m_currentVideoPath = filePath;
+    m_player->setVideoSink(m_videoSink);
+    m_player->setSource(QUrl::fromLocalFile(filePath));
+    m_player->setPlaybackRate(m_playbackRate);
+
+    // Reset round tracking state for clean run analysis
+    m_lastRound = 0;
+    m_lastRoundStr = QStringLiteral("-");
+    m_candidateRound = 0;
+    m_candidateCount = 0;
+    m_lastRoundStartPosMs = 0;
+    m_lapTimer.restart();
+
+    emit feedModeChanged(false);
+    emit statusMessage(QStringLiteral("Loaded gameplay video: %1").arg(QFileInfo(filePath).fileName()));
+    return true;
+}
+
+void VideoFeedWidget::play()
+{
+    if (m_feedMode == FeedMode::VideoFile && m_player) {
+        m_player->play();
+        emit statusMessage(QStringLiteral("Video playback started."));
+    }
+}
+
+void VideoFeedWidget::pause()
+{
+    if (m_feedMode == FeedMode::VideoFile && m_player) {
+        m_player->pause();
+        emit statusMessage(QStringLiteral("Video playback paused."));
+    }
+}
+
+void VideoFeedWidget::stop()
+{
+    if (m_feedMode == FeedMode::VideoFile && m_player) {
+        m_player->stop();
+        m_player->setPosition(0);
+        m_lastRoundStartPosMs = 0;
+        emit statusMessage(QStringLiteral("Video playback stopped."));
+    }
+}
+
+void VideoFeedWidget::seek(qint64 positionMs)
+{
+    if (m_feedMode == FeedMode::VideoFile && m_player) {
+        m_player->setPosition(positionMs);
+    }
+}
+
+void VideoFeedWidget::setPlaybackRate(qreal rate)
+{
+    m_playbackRate = rate;
+    if (m_player) {
+        m_player->setPlaybackRate(rate);
+    }
+    // Dynamically adjust inference frequency based on playback speed
+    int interval = std::max(60, static_cast<int>(350 / rate));
+    m_inferenceTimer.setInterval(interval);
+
+    emit statusMessage(QStringLiteral("Playback speed set to %1x").arg(rate, 0, 'f', 1));
+}
+
+bool VideoFeedWidget::isVideoPlaying() const
+{
+    return m_player && (m_player->playbackState() == QMediaPlayer::PlayingState);
+}
+
+bool VideoFeedWidget::isVideoFileLoaded() const
+{
+    return m_feedMode == FeedMode::VideoFile && !m_currentVideoPath.isEmpty();
+}
+
+void VideoFeedWidget::switchToLiveCamera()
+{
+    if (m_player) {
+        m_player->stop();
+    }
+    initCamera();
 }
 
 void VideoFeedWidget::onVideoFrameChanged(const QVideoFrame &frame)
@@ -130,7 +264,7 @@ void VideoFeedWidget::onScreenCaptureFallback()
 {
     if (m_cameraActive && !m_currentFrame.isNull()) return;
 
-    // Grab primary screen or window as a fallback
+    // Grab primary screen as a fallback
     QScreen *screen = QGuiApplication::primaryScreen();
     if (screen) {
         QPixmap pix = screen->grabWindow(0);
@@ -197,7 +331,19 @@ void VideoFeedWidget::onInferenceTimer()
         }
 
         if (m_candidateCount >= 2) {
-            double durationSec = m_lapTimer.restart() / 1000.0;
+            double durationSec = 0.0;
+            if (m_feedMode == FeedMode::VideoFile && m_player) {
+                qint64 curPos = m_player->position();
+                if (m_lastRoundStartPosMs > 0 && curPos >= m_lastRoundStartPosMs) {
+                    durationSec = (curPos - m_lastRoundStartPosMs) / 1000.0;
+                } else {
+                    durationSec = m_lapTimer.restart() / 1000.0;
+                }
+                m_lastRoundStartPosMs = curPos;
+            } else {
+                durationSec = m_lapTimer.restart() / 1000.0;
+            }
+
             m_lastRound = detectedRound;
             m_lastRoundStr = roundStr;
             m_candidateCount = 0;
@@ -214,6 +360,13 @@ void VideoFeedWidget::onInferenceTimer()
 
 double VideoFeedWidget::currentLapElapsedSec() const
 {
+    if (m_feedMode == FeedMode::VideoFile && m_player) {
+        qint64 pos = m_player->position();
+        if (pos >= m_lastRoundStartPosMs && m_lastRoundStartPosMs > 0) {
+            return (pos - m_lastRoundStartPosMs) / 1000.0;
+        }
+        return pos / 1000.0;
+    }
     return m_lapTimer.elapsed() / 1000.0;
 }
 
@@ -262,8 +415,13 @@ void VideoFeedWidget::paintEvent(QPaintEvent *)
         font.setBold(true);
         p.setFont(font);
 
-        p.drawText(rect(), Qt::AlignCenter, 
-                   QStringLiteral("Waiting for OBS Virtual Camera Stream...\n(1920 x 1080 Delayed Game Live Stream)"));
+        if (m_feedMode == FeedMode::VideoFile) {
+            p.drawText(rect(), Qt::AlignCenter, 
+                       QStringLiteral("Gameplay Video Ready\nClick Play or Open Video to begin analysis"));
+        } else {
+            p.drawText(rect(), Qt::AlignCenter, 
+                       QStringLiteral("Waiting for OBS Virtual Camera Stream...\n(1920 x 1080 Delayed Game Live Stream)"));
+        }
         return;
     }
 
@@ -284,7 +442,7 @@ void VideoFeedWidget::paintEvent(QPaintEvent *)
         targetRect = QRect(0, ty, tw, th);
     }
 
-    // Draw the downscaled video frame
+    // Draw the video frame
     p.drawImage(targetRect, frame);
 
     if (m_showOverlay) {
@@ -334,24 +492,57 @@ void VideoFeedWidget::paintEvent(QPaintEvent *)
         QRect hudRect(targetRect.x(), targetRect.y(), targetRect.width(), 26);
         p.fillRect(hudRect, QColor(0, 0, 0, 160));
 
-        // LIVE Indicator (blinking red circle)
-        if (m_liveBlinkState) {
-            p.setBrush(QColor(255, 30, 30));
+        if (m_feedMode == FeedMode::LiveCamera) {
+            // LIVE Indicator (blinking red circle)
+            if (m_liveBlinkState) {
+                p.setBrush(QColor(255, 30, 30));
+                p.setPen(Qt::NoPen);
+                p.drawEllipse(targetRect.x() + 8, targetRect.y() + 8, 10, 10);
+            }
+            p.setPen(Qt::white);
+            font.setPointSize(8);
+            font.setBold(true);
+            p.setFont(font);
+            p.drawText(QRect(targetRect.x() + 24, targetRect.y() + 5, 45, 16), Qt::AlignLeft | Qt::AlignVCenter, QStringLiteral("LIVE"));
+
+            // Resolution & FPS
+            font.setBold(false);
+            p.setFont(font);
+            p.setPen(QColor(220, 220, 220));
+            QString streamInfo = QStringLiteral("OBS Virtual Camera | 1920x1080 | %1 FPS").arg(m_cameraFps > 0 ? m_cameraFps : 60);
+            p.drawText(QRect(targetRect.x() + 75, targetRect.y() + 5, 280, 16), Qt::AlignLeft | Qt::AlignVCenter, streamInfo);
+        } else {
+            // Video File Mode HUD
+            bool isPlaying = isVideoPlaying();
+            p.setBrush(isPlaying ? QColor(0, 230, 80) : (m_player && m_player->playbackState() == QMediaPlayer::PausedState ? QColor(255, 170, 0) : QColor(160, 160, 160)));
             p.setPen(Qt::NoPen);
             p.drawEllipse(targetRect.x() + 8, targetRect.y() + 8, 10, 10);
-        }
-        p.setPen(Qt::white);
-        font.setPointSize(8);
-        font.setBold(true);
-        p.setFont(font);
-        p.drawText(QRect(targetRect.x() + 24, targetRect.y() + 5, 45, 16), Qt::AlignLeft | Qt::AlignVCenter, QStringLiteral("LIVE"));
 
-        // Resolution & FPS
-        font.setBold(false);
-        p.setFont(font);
-        p.setPen(QColor(220, 220, 220));
-        QString streamInfo = QStringLiteral("OBS Virtual Camera | 1920x1080 | %1 FPS").arg(m_cameraFps > 0 ? m_cameraFps : 60);
-        p.drawText(QRect(targetRect.x() + 75, targetRect.y() + 5, 250, 16), Qt::AlignLeft | Qt::AlignVCenter, streamInfo);
+            p.setPen(Qt::white);
+            font.setPointSize(8);
+            font.setBold(true);
+            p.setFont(font);
+            QString stateStr = isPlaying ? QStringLiteral("PLAYING") : (m_player && m_player->playbackState() == QMediaPlayer::PausedState ? QStringLiteral("PAUSED") : QStringLiteral("STOPPED"));
+            p.drawText(QRect(targetRect.x() + 24, targetRect.y() + 5, 55, 16), Qt::AlignLeft | Qt::AlignVCenter, stateStr);
+
+            // Time & File Info
+            font.setBold(false);
+            p.setFont(font);
+            p.setPen(QColor(220, 220, 220));
+
+            int curSec = static_cast<int>(m_videoPositionMs / 1000);
+            int totSec = static_cast<int>(m_videoDurationMs / 1000);
+            QString timeStr = QString::asprintf("%02d:%02d / %02d:%02d", curSec / 60, curSec % 60, totSec / 60, totSec % 60);
+            QString videoName = QFileInfo(m_currentVideoPath).fileName();
+            if (videoName.length() > 22) {
+                videoName = videoName.left(19) + QStringLiteral("...");
+            }
+            QString fileInfo = QStringLiteral("%1 | %2 | %3x (%4 FPS)")
+                                   .arg(videoName, timeStr)
+                                   .arg(m_playbackRate, 0, 'f', 1)
+                                   .arg(m_cameraFps > 0 ? m_cameraFps : 60);
+            p.drawText(QRect(targetRect.x() + 85, targetRect.y() + 5, 340, 16), Qt::AlignLeft | Qt::AlignVCenter, fileInfo);
+        }
 
         // Current Lap Timer in top right of HUD
         int elapsedSec = static_cast<int>(currentLapElapsedSec());
@@ -366,15 +557,34 @@ void VideoFeedWidget::paintEvent(QPaintEvent *)
 void VideoFeedWidget::contextMenuEvent(QContextMenuEvent *event)
 {
     QMenu menu(this);
+
     QAction *toggleOverlay = menu.addAction(m_showOverlay ? tr("Hide AI Overlay") : tr("Show AI Overlay"));
     connect(toggleOverlay, &QAction::triggered, this, [this]() {
         setOverlayEnabled(!m_showOverlay);
     });
 
-    QAction *reconnectCamera = menu.addAction(tr("Reconnect Camera"));
-    connect(reconnectCamera, &QAction::triggered, this, [this]() {
-        initCamera();
-    });
+    menu.addSeparator();
+
+    if (m_feedMode == FeedMode::VideoFile) {
+        if (isVideoPlaying()) {
+            QAction *actPause = menu.addAction(tr("Pause Playback"));
+            connect(actPause, &QAction::triggered, this, &VideoFeedWidget::pause);
+        } else {
+            QAction *actPlay = menu.addAction(tr("Resume Playback"));
+            connect(actPlay, &QAction::triggered, this, &VideoFeedWidget::play);
+        }
+        QAction *actStop = menu.addAction(tr("Stop Playback"));
+        connect(actStop, &QAction::triggered, this, &VideoFeedWidget::stop);
+
+        menu.addSeparator();
+        QAction *actLive = menu.addAction(tr("Switch to OBS Virtual Camera (Live)"));
+        connect(actLive, &QAction::triggered, this, &VideoFeedWidget::switchToLiveCamera);
+    } else {
+        QAction *reconnectCamera = menu.addAction(tr("Reconnect Camera"));
+        connect(reconnectCamera, &QAction::triggered, this, [this]() {
+            initCamera();
+        });
+    }
 
     menu.exec(event->globalPos());
 }

@@ -5,17 +5,25 @@
 #include <QImage>
 #include <QCamera>
 #include <QMediaCaptureSession>
+#include <QMediaPlayer>
+#include <QAudioOutput>
 #include <QVideoSink>
 #include <QVideoFrame>
 #include <QTimer>
 #include <QElapsedTimer>
 #include <QMutex>
+#include <QFileInfo>
 #include "eagleeye_classifier.h"
 
 class VideoFeedWidget : public QWidget {
     Q_OBJECT
 
 public:
+    enum class FeedMode {
+        LiveCamera,
+        VideoFile
+    };
+
     explicit VideoFeedWidget(QWidget *parent = nullptr);
     ~VideoFeedWidget() override;
 
@@ -23,6 +31,25 @@ public:
 
     bool initCamera(const QString &preferredDeviceName = QStringLiteral("OBS Virtual Camera"));
     void setEagleEyeClassifier(EagleEyeClassifier *classifier);
+
+    // Video File Playback & Analysis API
+    bool openVideoFile(const QString &filePath);
+    void play();
+    void pause();
+    void stop();
+    void seek(qint64 positionMs);
+    void setPlaybackRate(qreal rate);
+    qreal playbackRate() const { return m_playbackRate; }
+
+    bool isVideoPlaying() const;
+    bool isVideoFileLoaded() const;
+    FeedMode feedMode() const { return m_feedMode; }
+    bool isLiveCameraMode() const { return m_feedMode == FeedMode::LiveCamera; }
+    void switchToLiveCamera();
+
+    qint64 videoPosition() const { return m_videoPositionMs; }
+    qint64 videoDuration() const { return m_videoDurationMs; }
+    QString currentVideoPath() const { return m_currentVideoPath; }
 
     void setRoi(int x, int y, int w, int h);
     QRect roi() const;
@@ -37,6 +64,10 @@ signals:
     void roundDetected(int roundNumber, const QString &roundStr, double durationSec);
     void statusMessage(const QString &msg);
     void frameCaptured(int fps);
+    void videoPositionChanged(qint64 positionMs, qint64 durationMs);
+    void videoDurationChanged(qint64 durationMs);
+    void playbackStateChanged(bool isPlaying);
+    void feedModeChanged(bool isLiveCamera);
 
 protected:
     void paintEvent(QPaintEvent *event) override;
@@ -49,9 +80,19 @@ private slots:
     void onScreenCaptureFallback();
 
 private:
+    FeedMode m_feedMode = FeedMode::LiveCamera;
+
     QCamera *m_camera = nullptr;
     QMediaCaptureSession *m_captureSession = nullptr;
     QVideoSink *m_videoSink = nullptr;
+
+    QMediaPlayer *m_player = nullptr;
+    QAudioOutput *m_audioOutput = nullptr;
+    QString m_currentVideoPath;
+    qint64 m_videoPositionMs = 0;
+    qint64 m_videoDurationMs = 0;
+    qreal m_playbackRate = 1.0;
+    qint64 m_lastRoundStartPosMs = 0;
 
     EagleEyeClassifier *m_classifier = nullptr;
 

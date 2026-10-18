@@ -54,6 +54,24 @@ template <> constexpr inline auto MainWindow::qt_create_metaobjectdata<qt_meta_t
         "onIpUpdated",
         "intIp",
         "extIp",
+        "onOpenVideoClicked",
+        "onPlayVideoClicked",
+        "onPauseVideoClicked",
+        "onStopVideoClicked",
+        "onLiveCameraClicked",
+        "onSpeedChanged",
+        "index",
+        "onSliderSeek",
+        "pos",
+        "onVideoPositionChanged",
+        "posMs",
+        "durMs",
+        "onVideoDurationChanged",
+        "onPlaybackStateChanged",
+        "isPlaying",
+        "onFeedModeChanged",
+        "isLiveCamera",
+        "onLoadTestGameplayClicked",
         "onSetIterationClicked",
         "onRunQueryClicked",
         "onRequestDataClicked",
@@ -86,32 +104,68 @@ template <> constexpr inline auto MainWindow::qt_create_metaobjectdata<qt_meta_t
         QtMocHelpers::SlotData<void(const QString &, const QString &)>(11, 2, QMC::AccessPrivate, QMetaType::Void, {{
             { QMetaType::QString, 12 }, { QMetaType::QString, 13 },
         }}),
-        // Slot 'onSetIterationClicked'
+        // Slot 'onOpenVideoClicked'
         QtMocHelpers::SlotData<void()>(14, 2, QMC::AccessPrivate, QMetaType::Void),
-        // Slot 'onRunQueryClicked'
+        // Slot 'onPlayVideoClicked'
         QtMocHelpers::SlotData<void()>(15, 2, QMC::AccessPrivate, QMetaType::Void),
-        // Slot 'onRequestDataClicked'
+        // Slot 'onPauseVideoClicked'
         QtMocHelpers::SlotData<void()>(16, 2, QMC::AccessPrivate, QMetaType::Void),
-        // Slot 'onRefreshClicked'
+        // Slot 'onStopVideoClicked'
         QtMocHelpers::SlotData<void()>(17, 2, QMC::AccessPrivate, QMetaType::Void),
-        // Slot 'onDropDbTableClicked'
+        // Slot 'onLiveCameraClicked'
         QtMocHelpers::SlotData<void()>(18, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'onSpeedChanged'
+        QtMocHelpers::SlotData<void(int)>(19, 2, QMC::AccessPrivate, QMetaType::Void, {{
+            { QMetaType::Int, 20 },
+        }}),
+        // Slot 'onSliderSeek'
+        QtMocHelpers::SlotData<void(int)>(21, 2, QMC::AccessPrivate, QMetaType::Void, {{
+            { QMetaType::Int, 22 },
+        }}),
+        // Slot 'onVideoPositionChanged'
+        QtMocHelpers::SlotData<void(qint64, qint64)>(23, 2, QMC::AccessPrivate, QMetaType::Void, {{
+            { QMetaType::LongLong, 24 }, { QMetaType::LongLong, 25 },
+        }}),
+        // Slot 'onVideoDurationChanged'
+        QtMocHelpers::SlotData<void(qint64)>(26, 2, QMC::AccessPrivate, QMetaType::Void, {{
+            { QMetaType::LongLong, 25 },
+        }}),
+        // Slot 'onPlaybackStateChanged'
+        QtMocHelpers::SlotData<void(bool)>(27, 2, QMC::AccessPrivate, QMetaType::Void, {{
+            { QMetaType::Bool, 28 },
+        }}),
+        // Slot 'onFeedModeChanged'
+        QtMocHelpers::SlotData<void(bool)>(29, 2, QMC::AccessPrivate, QMetaType::Void, {{
+            { QMetaType::Bool, 30 },
+        }}),
+        // Slot 'onLoadTestGameplayClicked'
+        QtMocHelpers::SlotData<void()>(31, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'onSetIterationClicked'
+        QtMocHelpers::SlotData<void()>(32, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'onRunQueryClicked'
+        QtMocHelpers::SlotData<void()>(33, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'onRequestDataClicked'
+        QtMocHelpers::SlotData<void()>(34, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'onRefreshClicked'
+        QtMocHelpers::SlotData<void()>(35, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'onDropDbTableClicked'
+        QtMocHelpers::SlotData<void()>(36, 2, QMC::AccessPrivate, QMetaType::Void),
         // Slot 'onClearLogClicked'
-        QtMocHelpers::SlotData<void()>(19, 2, QMC::AccessPrivate, QMetaType::Void),
+        QtMocHelpers::SlotData<void()>(37, 2, QMC::AccessPrivate, QMetaType::Void),
         // Slot 'onExitClicked'
-        QtMocHelpers::SlotData<void()>(20, 2, QMC::AccessPrivate, QMetaType::Void),
+        QtMocHelpers::SlotData<void()>(38, 2, QMC::AccessPrivate, QMetaType::Void),
         // Slot 'onHelpDeskClicked'
-        QtMocHelpers::SlotData<void()>(21, 2, QMC::AccessPrivate, QMetaType::Void),
+        QtMocHelpers::SlotData<void()>(39, 2, QMC::AccessPrivate, QMetaType::Void),
         // Slot 'onMyAccountClicked'
-        QtMocHelpers::SlotData<void()>(22, 2, QMC::AccessPrivate, QMetaType::Void),
+        QtMocHelpers::SlotData<void()>(40, 2, QMC::AccessPrivate, QMetaType::Void),
         // Slot 'onLiveFeedClicked'
-        QtMocHelpers::SlotData<void()>(23, 2, QMC::AccessPrivate, QMetaType::Void),
+        QtMocHelpers::SlotData<void()>(41, 2, QMC::AccessPrivate, QMetaType::Void),
         // Slot 'onPlotDataClicked'
-        QtMocHelpers::SlotData<void()>(24, 2, QMC::AccessPrivate, QMetaType::Void),
+        QtMocHelpers::SlotData<void()>(42, 2, QMC::AccessPrivate, QMetaType::Void),
         // Slot 'onSaveClicked'
-        QtMocHelpers::SlotData<void()>(25, 2, QMC::AccessPrivate, QMetaType::Void),
+        QtMocHelpers::SlotData<void()>(43, 2, QMC::AccessPrivate, QMetaType::Void),
         // Slot 'onDisconnectClicked'
-        QtMocHelpers::SlotData<void()>(26, 2, QMC::AccessPrivate, QMetaType::Void),
+        QtMocHelpers::SlotData<void()>(44, 2, QMC::AccessPrivate, QMetaType::Void),
     };
     QtMocHelpers::UintData qt_properties {
     };
@@ -139,19 +193,31 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 1: _t->onRoundDetected((*reinterpret_cast<std::add_pointer_t<int>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<QString>>(_a[2])),(*reinterpret_cast<std::add_pointer_t<double>>(_a[3]))); break;
         case 2: _t->onGpuUpdated((*reinterpret_cast<std::add_pointer_t<GpuStats>>(_a[1]))); break;
         case 3: _t->onIpUpdated((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<QString>>(_a[2]))); break;
-        case 4: _t->onSetIterationClicked(); break;
-        case 5: _t->onRunQueryClicked(); break;
-        case 6: _t->onRequestDataClicked(); break;
-        case 7: _t->onRefreshClicked(); break;
-        case 8: _t->onDropDbTableClicked(); break;
-        case 9: _t->onClearLogClicked(); break;
-        case 10: _t->onExitClicked(); break;
-        case 11: _t->onHelpDeskClicked(); break;
-        case 12: _t->onMyAccountClicked(); break;
-        case 13: _t->onLiveFeedClicked(); break;
-        case 14: _t->onPlotDataClicked(); break;
-        case 15: _t->onSaveClicked(); break;
-        case 16: _t->onDisconnectClicked(); break;
+        case 4: _t->onOpenVideoClicked(); break;
+        case 5: _t->onPlayVideoClicked(); break;
+        case 6: _t->onPauseVideoClicked(); break;
+        case 7: _t->onStopVideoClicked(); break;
+        case 8: _t->onLiveCameraClicked(); break;
+        case 9: _t->onSpeedChanged((*reinterpret_cast<std::add_pointer_t<int>>(_a[1]))); break;
+        case 10: _t->onSliderSeek((*reinterpret_cast<std::add_pointer_t<int>>(_a[1]))); break;
+        case 11: _t->onVideoPositionChanged((*reinterpret_cast<std::add_pointer_t<qint64>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<qint64>>(_a[2]))); break;
+        case 12: _t->onVideoDurationChanged((*reinterpret_cast<std::add_pointer_t<qint64>>(_a[1]))); break;
+        case 13: _t->onPlaybackStateChanged((*reinterpret_cast<std::add_pointer_t<bool>>(_a[1]))); break;
+        case 14: _t->onFeedModeChanged((*reinterpret_cast<std::add_pointer_t<bool>>(_a[1]))); break;
+        case 15: _t->onLoadTestGameplayClicked(); break;
+        case 16: _t->onSetIterationClicked(); break;
+        case 17: _t->onRunQueryClicked(); break;
+        case 18: _t->onRequestDataClicked(); break;
+        case 19: _t->onRefreshClicked(); break;
+        case 20: _t->onDropDbTableClicked(); break;
+        case 21: _t->onClearLogClicked(); break;
+        case 22: _t->onExitClicked(); break;
+        case 23: _t->onHelpDeskClicked(); break;
+        case 24: _t->onMyAccountClicked(); break;
+        case 25: _t->onLiveFeedClicked(); break;
+        case 26: _t->onPlotDataClicked(); break;
+        case 27: _t->onSaveClicked(); break;
+        case 28: _t->onDisconnectClicked(); break;
         default: ;
         }
     }
@@ -176,14 +242,14 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 17)
+        if (_id < 29)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 17;
+        _id -= 29;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 17)
+        if (_id < 29)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 17;
+        _id -= 29;
     }
     return _id;
 }
