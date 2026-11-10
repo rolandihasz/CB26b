@@ -1,0 +1,34 @@
+{
+  "manual": {},
+  "generated": {
+    "specVersion": "0.3",
+    "generatedAt": "2026-11-05T06:29:29.055Z",
+    "by": {
+      "name": "agents-audit",
+      "version": "0.4.3"
+    },
+    "frameworkManifest": [],
+    "fileIndex": {},
+    "topology": {
+      "packageCount": 0,
+      "type": "single-package",
+      "ciProvider": "unknown",
+      "agentFiles": {
+        "workspaceJson": ".agents/workspace.json"
+      }
+    },
+    "hygiene": {
+      "score": 100,
+      "grade": "A",
+      "failCount": 0,
+      "warnCount": 0,
+      "scannedAt": "2026-11-05T06:29:29.055Z"
+    }
+  },
+  "agents": {},
+  "health": {
+    "intelligenceState": "INSUFFICIENT_DATA",
+    "observationCount": 0,
+    "confidence": 0
+  }
+}

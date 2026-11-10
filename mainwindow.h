@@ -106,6 +106,13 @@ private:
   QLabel *m_positionLabel = nullptr;
   QPushButton *m_btnLiveFeed = nullptr;
   QPushButton *m_btnVideoToggle = nullptr;
+  QComboBox *m_digitModeCombo = nullptr;
+
+  // Telemetry & Session state for SQLite recording
+  QString m_loadedModelPath;
+  GpuStats m_lastGpuStats;
+  double m_prevRoundDurationSec = 0.0;
+  double m_cumulativeRunSec = 0.0;
 };
 
 #endif // MAINWINDOW_H

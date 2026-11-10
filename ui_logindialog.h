@@ -60,34 +60,240 @@ public:
         LoginDialog->setMinimumSize(QSize(385, 245));
         LoginDialog->setMaximumSize(QSize(385, 245));
         QIcon icon;
-        icon.addFile(QString::fromUtf8(":/icons/icons/database.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        icon.addFile(QString::fromUtf8(":/icons/icons/database.ico"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
         LoginDialog->setWindowIcon(icon);
-        LoginDialog->setStyleSheet(QString::fromUtf8("QDialog {\n"
-"    background-color: #e4e4e4;\n"
-"    font-family: 'Segoe UI', Arial, sans-serif;\n"
-"}"));
+        LoginDialog->setStyleSheet(QString::fromUtf8("/* ===================================================================\n"
+"   COFFEEBREAK TELEMETRY - WORLD CLASS MISSION CONTROL THEME\n"
+"   LOGIN DIALOG\n"
+"   =================================================================== */\n"
+"\n"
+"QDialog#LoginDialog {\n"
+"    background-color: #0b0f19;\n"
+"    color: #f8fafc;\n"
+"    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Inter', 'Roboto', sans-serif;\n"
+"    font-size: 11px;\n"
+"}\n"
+"\n"
+"/* --- Top Utility Bar --- */\n"
+"QWidget#topBar {\n"
+"    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #151e30, stop:1 #0c121e);\n"
+"    border-bottom: 1px solid #1e293b;\n"
+"}\n"
+"\n"
+"QLabel#m_timeLabel {\n"
+"    color: #38bdf8;\n"
+"    font-family: 'Consolas', 'Segoe UI', monospace;\n"
+"    font-size: 11px;\n"
+"    font-weight: 600;\n"
+"    letter-spacing: 0.5px;\n"
+"}\n"
+"\n"
+"QPushButton#m_helpBtn {\n"
+"    background-color: #1e293b;\n"
+"    border: 1px solid #334155;\n"
+"    border-radius: 4px;\n"
+"    color: #38bdf8;\n"
+"    font-family: 'Segoe UI', sans-serif;\n"
+"    font-weight: bold;\n"
+"    font-size: 12px;\n"
+"}\n"
+"\n"
+"QPushButton#m_helpBtn:hover {\n"
+"    background-color: #27354d;\n"
+"    border-color: #38bdf8;\n"
+"    color: #ffffff;\n"
+"}\n"
+"\n"
+"QPushButton#m_helpBtn:pressed {\n"
+"    background-color: #0f172a;\n"
+"    border-color: #0284c7;\n"
+"    color: #38bdf8;\n"
+"}\n"
+"\n"
+"QPushButton#m_powerBtn {\n"
+"    background-color: #1e293b;\n"
+"    border: 1px solid #334155;\n"
+"    border-radius: 4px;\n"
+"    color: #f87171;\n"
+"}\n"
+"\n"
+"QPushButton#m_powerBtn:hover {\n"
+"    background-color: #7f1d1d;\n"
+"    border-color: #ef4444;\n"
+"}\n"
+"\n"
+"QPushButton#m_powerBtn:pressed {\n"
+"    background-color: #991b1b;\n"
+"    border-color: #f87171;\n"
+"}\n"
+"\n"
+"/* --- Card Containers and Panels --- */\n"
+"QFrame#formFrame, QFrame[isCard=\"true\"] {\n"
+"    background-color: #0f172a;\n"
+"    border: 1px solid #1e293b;\n"
+"    border-radius: 6px;\n"
+"}\n"
+"\n"
+"QFrame#formFrame:hover, QFrame[isCard=\"true\"]:hover {\n"
+"    border: 1px solid #334155;\n"
+"}\n"
+"\n"
+"/* --- Form Field Labels --- */\n"
+"QLabel#userLabel, QLabel#passLabel, QLabel#dbLabel {\n"
+"    color: #94a3b8;\n"
+"    font-size: 11px;\n"
+"    font-weight: 600;\n"
+"}\n"
+"\n"
+"/* --- Input Controls --- */\n"
+"QLineEdit {\n"
+"    background-color: #0b0f19;\n"
+"    border: 1px solid #334155;\n"
+"    border-radius: 4px;\n"
+"    padding: 3px 8px;\n"
+"    color: #f8fafc;\n"
+"    font-family: 'Consolas', 'Courier New', monospace;\n"
+"    font-size: 11px;\n"
+"}\n"
+"\n"
+"QLineEdit:hover {\n"
+"    border-color: #475569;\n"
+"}\n"
+"\n"
+"QLineEdit:focus {\n"
+"    border: 1px solid #38bdf8;\n"
+"    background-color: #0f172a;\n"
+"}\n"
+"\n"
+"/* --- Database Dropdown --- */\n"
+"QComboBox {\n"
+"    background-color: #0b0f19;\n"
+"    border: 1px solid #334155;\n"
+"    border-radius: 4px;\n"
+"    padding: 3px 8px;\n"
+"    color: #f8fafc;\n"
+"    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;\n"
+"    font-size: 11px;\n"
+"}\n"
+"\n"
+"QComboBox:hover {\n"
+"    border-color: #38bdf8;\n"
+"}\n"
+"\n"
+"QComboBox:focus {\n"
+"    border: 1px solid #38bdf8;\n"
+"    background-color: #0f172a;\n"
+"}\n"
+"\n"
+"QComboBox::drop-down {\n"
+"    subcontrol-origin: padding;\n"
+"    subcontrol-position: top right;\n"
+"    width: 20px;\n"
+"    border-left: 1px solid #1e293b;\n"
+"    border-top-right-radius: 4px;\n"
+"    border-bottom-right-radius: 4px;\n"
+"}\n"
+"\n"
+"QComboBox::down-arrow {\n"
+"    border-left: 4px solid transparent;\n"
+"    border-right: 4px solid transparent;\n"
+"    border-top: 5px solid #38bdf8;\n"
+"    width: 0px;\n"
+"    height: 0px;\n"
+"    margin-top: 1px;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView {\n"
+"    background-color: #0f172a;\n"
+"    color: #f8fafc;\n"
+"    border: 1px solid #1e293b;\n"
+"    selection-background-color: #1e293b;\n"
+"    selection-color: #38bdf8;\n"
+"    outline: none;\n"
+"    padding: 2px;\n"
+"}\n"
+"\n"
+"/* --- Push Buttons --- */\n"
+"QPushButton {\n"
+"    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #222f44, stop:1 #1a2436);\n"
+"    color: #f1f5f9;\n"
+"    border: 1px solid #334155;\n"
+"    border-radius: 4px;\n"
+"    padding: 4px 10px;\n"
+"    font-size: 11px;\n"
+"    font-weight: 600;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #2d3e5a, stop:1 #223048);\n"
+"    border-color: #38bdf8;\n"
+"    color: #ffffff;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background: #141d2c;\n"
+"    border-color: #0284c7;\n"
+"    color: #38bdf8;\n"
+"}\n"
+"\n"
+"/* Primary Action: Login */\n"
+"QPushButton#m_loginBtn {\n"
+"    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #0284c7, stop:1 #0369a1);\n"
+"    border: 1px solid #38bdf8;\n"
+"    color: #ffffff;\n"
+"    font-weight: bold;\n"
+"}\n"
+"\n"
+"QPushButton#m_loginBtn:hover {\n"
+"    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #0ea5e9, stop:1 #0284c7);\n"
+"    border-color: #7dd3fc;\n"
+"}\n"
+"\n"
+"QPushButton#m_loginBtn:pressed {\n"
+"    background: #0369a1;\n"
+"    border-color: #0284c7;\n"
+"    color: #38bdf8;\n"
+"}\n"
+"\n"
+"/* Secondary Action: Cancel */\n"
+"QPushButton#m_cancelBtn {\n"
+"    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #222f44, stop:1 #1a2436);\n"
+"    border: 1px solid #334155;\n"
+"    color: #cbd5e1;\n"
+"}\n"
+"\n"
+"QPushButton#m_cancelBtn:hover {\n"
+"    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #2d3e5a, stop:1 #223048);\n"
+"    border-color: #f87171;\n"
+"    color: #f87171;\n"
+"}\n"
+"\n"
+"QPushButton#m_cancelBtn:pressed {\n"
+"    background: #141d2c;\n"
+"    border-color: #ef4444;\n"
+"    color: #ef4444;\n"
+"}\n"
+"\n"
+"/* --- Footer --- */\n"
+"QLabel#footerLabel {\n"
+"    color: #64748b;\n"
+"    font-size: 10px;\n"
+"}\n"
+""));
         mainLayout = new QVBoxLayout(LoginDialog);
         mainLayout->setSpacing(10);
         mainLayout->setObjectName("mainLayout");
         mainLayout->setContentsMargins(0, 0, 0, 8);
         topBar = new QWidget(LoginDialog);
         topBar->setObjectName("topBar");
-        topBar->setMinimumSize(QSize(0, 26));
-        topBar->setMaximumSize(QSize(16777215, 26));
-        topBar->setStyleSheet(QString::fromUtf8("QWidget#topBar {\n"
-"    background-color: #8f9296;\n"
-"    border-bottom: 1px solid #7d8084;\n"
-"}"));
+        topBar->setMinimumSize(QSize(0, 28));
+        topBar->setMaximumSize(QSize(16777215, 28));
         topBarLayout = new QHBoxLayout(topBar);
-        topBarLayout->setSpacing(0);
+        topBarLayout->setSpacing(4);
         topBarLayout->setObjectName("topBarLayout");
-        topBarLayout->setContentsMargins(8, 0, 0, 0);
+        topBarLayout->setContentsMargins(8, 0, 4, 0);
         m_timeLabel = new QLabel(topBar);
         m_timeLabel->setObjectName("m_timeLabel");
-        m_timeLabel->setStyleSheet(QString::fromUtf8("color: #000000;\n"
-"font-family: 'Segoe UI', Arial, sans-serif;\n"
-"font-size: 13px;\n"
-"font-weight: normal;"));
 
         topBarLayout->addWidget(m_timeLabel);
 
@@ -97,45 +303,21 @@ public:
 
         m_helpBtn = new QPushButton(topBar);
         m_helpBtn->setObjectName("m_helpBtn");
-        m_helpBtn->setMinimumSize(QSize(26, 26));
-        m_helpBtn->setMaximumSize(QSize(26, 26));
+        m_helpBtn->setMinimumSize(QSize(24, 24));
+        m_helpBtn->setMaximumSize(QSize(24, 24));
         m_helpBtn->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        m_helpBtn->setStyleSheet(QString::fromUtf8("QPushButton {\n"
-"    background-color: #6fe36f;\n"
-"    border: 1px solid #489e48;\n"
-"    border-right: none;\n"
-"    color: #000000;\n"
-"    font-weight: bold;\n"
-"    font-size: 13px;\n"
-"}\n"
-"QPushButton:hover {\n"
-"    background-color: #5bd45b;\n"
-"}\n"
-"QPushButton:pressed {\n"
-"    background-color: #4ac04a;\n"
-"}"));
 
         topBarLayout->addWidget(m_helpBtn);
 
         m_powerBtn = new QPushButton(topBar);
         m_powerBtn->setObjectName("m_powerBtn");
-        m_powerBtn->setMinimumSize(QSize(26, 26));
-        m_powerBtn->setMaximumSize(QSize(26, 26));
+        m_powerBtn->setMinimumSize(QSize(24, 24));
+        m_powerBtn->setMaximumSize(QSize(24, 24));
         m_powerBtn->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        m_powerBtn->setStyleSheet(QString::fromUtf8("QPushButton {\n"
-"    background-color: #ea5d5d;\n"
-"    border: 1px solid #ba3838;\n"
-"}\n"
-"QPushButton:hover {\n"
-"    background-color: #dc4b4b;\n"
-"}\n"
-"QPushButton:pressed {\n"
-"    background-color: #cb3939;\n"
-"}"));
         QIcon icon1;
         icon1.addFile(QString::fromUtf8(":/icons/icons/power-switch.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
         m_powerBtn->setIcon(icon1);
-        m_powerBtn->setIconSize(QSize(16, 16));
+        m_powerBtn->setIconSize(QSize(14, 14));
 
         topBarLayout->addWidget(m_powerBtn);
 
@@ -149,57 +331,9 @@ public:
         centerWrapperLayout->setContentsMargins(14, 0, 14, 0);
         formFrame = new QFrame(centerWrapper);
         formFrame->setObjectName("formFrame");
-        formFrame->setStyleSheet(QString::fromUtf8("QFrame#formFrame {\n"
-"    background-color: #ededed;\n"
-"    border: 1px solid #b8b8b8;\n"
-"    border-radius: 2px;\n"
-"}\n"
-"QLabel {\n"
-"    color: #000000;\n"
-"    font-size: 12px;\n"
-"}\n"
-"QLineEdit {\n"
-"    background-color: #ffffff;\n"
-"    border: 1px solid #999999;\n"
-"    border-radius: 2px;\n"
-"    padding: 2px 4px;\n"
-"    color: #000000;\n"
-"    font-size: 12px;\n"
-"}\n"
-"QLineEdit:focus {\n"
-"    border: 1px solid #0078d7;\n"
-"}\n"
-"QComboBox {\n"
-"    background-color: #ffffff;\n"
-"    border: 1px solid #999999;\n"
-"    border-radius: 2px;\n"
-"    padding: 2px 6px;\n"
-"    color: #000000;\n"
-"    font-size: 12px;\n"
-"}\n"
-"QComboBox::drop-down {\n"
-"    subcontrol-origin: padding;\n"
-"    subcontrol-position: top right;\n"
-"    width: 20px;\n"
-"    border-left: 1px solid #c8c8c8;\n"
-"}\n"
-"QComboBox::down-arrow {\n"
-"    border-left: 4px solid transparent;\n"
-"    border-right: 4px solid transparent;\n"
-"    border-top: 5px solid #444444;\n"
-"    width: 0px;\n"
-"    height: 0px;\n"
-"    margin"
-                        "-top: 1px;\n"
-"}\n"
-"QComboBox QAbstractItemView {\n"
-"    background-color: #ffffff;\n"
-"    color: #000000;\n"
-"    selection-background-color: #0078d7;\n"
-"    selection-color: #ffffff;\n"
-"}"));
         formFrame->setFrameShape(QFrame::Shape::StyledPanel);
         formFrame->setFrameShadow(QFrame::Shadow::Raised);
+        formFrame->setProperty("isCard", QVariant(true));
         gridLayout = new QGridLayout(formFrame);
         gridLayout->setObjectName("gridLayout");
         gridLayout->setHorizontalSpacing(10);
@@ -239,7 +373,9 @@ public:
         gridLayout->addWidget(dbLabel, 2, 0, 1, 1);
 
         m_databaseCombo = new QComboBox(formFrame);
-        m_databaseCombo->addItem(icon, QString());
+        QIcon iconDb;
+        iconDb.addFile(QString::fromUtf8(":/icons/icons/database.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        m_databaseCombo->addItem(iconDb, QString());
         m_databaseCombo->setObjectName("m_databaseCombo");
         m_databaseCombo->setMinimumSize(QSize(0, 24));
         m_databaseCombo->setMaximumSize(QSize(16777215, 24));
@@ -258,20 +394,6 @@ public:
         m_cancelBtn->setMinimumSize(QSize(86, 26));
         m_cancelBtn->setMaximumSize(QSize(86, 26));
         m_cancelBtn->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        m_cancelBtn->setStyleSheet(QString::fromUtf8("QPushButton {\n"
-"    background-color: #fbfbfb;\n"
-"    border: 1px solid #adadad;\n"
-"    border-radius: 3px;\n"
-"    color: #000000;\n"
-"    font-size: 12px;\n"
-"}\n"
-"QPushButton:hover {\n"
-"    background-color: #e5f1fb;\n"
-"    border-color: #0078d7;\n"
-"}\n"
-"QPushButton:pressed {\n"
-"    background-color: #cce4f7;\n"
-"}"));
         QIcon icon2;
         icon2.addFile(QString::fromUtf8(":/icons/icons/exit.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
         m_cancelBtn->setIcon(icon2);
@@ -284,20 +406,6 @@ public:
         m_loginBtn->setMinimumSize(QSize(86, 26));
         m_loginBtn->setMaximumSize(QSize(86, 26));
         m_loginBtn->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        m_loginBtn->setStyleSheet(QString::fromUtf8("QPushButton {\n"
-"    background-color: #fbfbfb;\n"
-"    border: 1px solid #adadad;\n"
-"    border-radius: 3px;\n"
-"    color: #000000;\n"
-"    font-size: 12px;\n"
-"}\n"
-"QPushButton:hover {\n"
-"    background-color: #e5f1fb;\n"
-"    border-color: #0078d7;\n"
-"}\n"
-"QPushButton:pressed {\n"
-"    background-color: #cce4f7;\n"
-"}"));
         QIcon icon3;
         icon3.addFile(QString::fromUtf8(":/icons/icons/home.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
         m_loginBtn->setIcon(icon3);
@@ -316,8 +424,6 @@ public:
 
         footerLabel = new QLabel(LoginDialog);
         footerLabel->setObjectName("footerLabel");
-        footerLabel->setStyleSheet(QString::fromUtf8("color: #000000;\n"
-"font-size: 11px;"));
         footerLabel->setAlignment(Qt::AlignmentFlag::AlignCenter);
         footerLabel->setOpenExternalLinks(true);
 
@@ -354,7 +460,7 @@ public:
 
         m_cancelBtn->setText(QCoreApplication::translate("LoginDialog", "Cancel", nullptr));
         m_loginBtn->setText(QCoreApplication::translate("LoginDialog", "Login", nullptr));
-        footerLabel->setText(QCoreApplication::translate("LoginDialog", "CoffeeBreak \302\251 2019 | <a href=\"https://lnrsoft.com\" style=\"color: #0078d7; text-decoration: none;\">LnRSoft.com</a>", nullptr));
+        footerLabel->setText(QCoreApplication::translate("LoginDialog", "CoffeeBreak \302\251 2019 | <a href=\"https://lnrsoft.com\" style=\"color: #38bdf8; text-decoration: none;\">LnRSoft.com</a>", nullptr));
     } // retranslateUi
 
 };

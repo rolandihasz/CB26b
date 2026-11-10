@@ -13,6 +13,8 @@
 #include <QElapsedTimer>
 #include <QMutex>
 #include <QFileInfo>
+#include <QMouseEvent>
+#include <QSettings>
 #include "eagleeye_classifier.h"
 #include "dshow_capture.h"
 
@@ -55,7 +57,14 @@ public:
     void setRoi(int x, int y, int w, int h);
     QRect roi() const;
 
+    DigitMode digitMode() const { return m_digitMode; }
+    void setDigitMode(DigitMode mode);
+    void setRoiPreset(DigitMode mode);
+    void resetRoiToDefault();
+
     int currentRound() const { return m_lastRound; }
+    float lastConfidence() const { return m_lastConfidence; }
+    int cameraFps() const { return m_cameraFps; }
     double currentLapElapsedSec() const;
 
     void setOverlayEnabled(bool enabled) { m_showOverlay = enabled; update(); }
@@ -76,11 +85,16 @@ signals:
     void videoDurationChanged(qint64 durationMs);
     void playbackStateChanged(bool isPlaying);
     void feedModeChanged(bool isLiveCamera);
+    void digitModeChanged(DigitMode mode);
+    void roiChanged(const QRect &roi);
 
 protected:
     void paintEvent(QPaintEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
     void contextMenuEvent(QContextMenuEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
 
 private slots:
     void onVideoFrameChanged(const QVideoFrame &frame);
@@ -137,6 +151,38 @@ private:
     bool m_showOverlay = true;
     bool m_liveBlinkState = true;
     QTimer m_blinkTimer;
+
+    enum class DragHandle {
+        None,
+        Move,
+        TopLeft,
+        Top,
+        TopRight,
+        Right,
+        BottomRight,
+        Bottom,
+        BottomLeft,
+        Left
+    };
+
+    QRect calculateTargetRect() const;
+    QRect roiScreenRect() const;
+    DragHandle hitTest(const QPoint &pos) const;
+    void updateCursorForHandle(DragHandle handle);
+    void loadSettings();
+    void saveSettings();
+
+    DigitMode m_digitMode = DigitMode::Auto;
+    DragHandle m_dragHandle = DragHandle::None;
+    DragHandle m_hoverHandle = DragHandle::None;
+    QPoint m_dragStartMousePos;
+    QRect m_dragStartRoi;
+
+    // HUD Pill button hit areas
+    QRect m_pillAutoRect;
+    QRect m_pill1DRect;
+    QRect m_pill2DRect;
+    QRect m_pill3DRect;
 };
 
 #endif // VIDEOFEEDWIDGET_H
