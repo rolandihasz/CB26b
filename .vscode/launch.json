@@ -9,7 +9,7 @@
       "stopAtEntry": false,
       "externalConsole": true,
       "cwd": "d:/cb26/cb26",
-      "program": "d:/cb26/cb26/build/Debug/outDebug",
+      "program": "d:/cb26/cb26/build/Release/outRelease",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
@@ -18,7 +18,8 @@
           "text": "-enable-pretty-printing",
           "ignoreFailures": true
         }
-      ]
+      ],
+      "visualizerFile": "c:\\Users\\rolan\\AppData\\Roaming\\Antigravity IDE\\User\\workspaceStorage\\7a8369382a654f729a0522c793b53de4\\tonka3000.qtvsctools\\qt.natvis.xml"
     }
   ]
 }

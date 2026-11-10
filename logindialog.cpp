@@ -44,7 +44,6 @@ LoginDialog::~LoginDialog() { delete ui; }
 
 void LoginDialog::updateClock() {
   if (ui && ui->m_timeLabel) {
-    // Format matching: Sat Oct 17 2026 14:11:08
     QString timeStr = QLocale(QLocale::English)
                           .toString(QDateTime::currentDateTime(),
                                     QStringLiteral("ddd MMM d yyyy hh:mm:ss"));
@@ -56,30 +55,40 @@ void LoginDialog::onLoginClicked() {
   QString user = ui->m_usernameEdit->text().trimmed();
   QString pass = ui->m_passwordEdit->text();
 
-  // save time
-  //  accept();
-  accept();
-
   if (user.isEmpty() || pass.isEmpty()) {
     QMessageBox::warning(this, tr("Login Error"),
                          tr("Please enter both username and password."));
     return;
   }
 
-  bool success = false;
-  if (m_dbMgr) {
-    success = m_dbMgr->authenticateUser(user, pass);
-  } else {
-    DatabaseManager db;
-    success = db.authenticateUser(user, pass);
+  // Strictly require an existing, connected SQLite database even for admin/admin
+  if (!m_dbMgr) {
+    QMessageBox::critical(
+        this, tr("Database Unavailable"),
+        tr("Database manager is not initialized. Login cannot proceed."));
+    return;
   }
 
-  if (success) {
+  if (!m_dbMgr->isConnected() && !m_dbMgr->openExistingDatabase()) {
+    QMessageBox::critical(
+        this, tr("Database Connection Error"),
+        tr("SQLite database (coffeebreak.db) was not found or unable to connect.\n\n"
+           "Login is not permitted when the database is unavailable (even for the main admin account)."));
+    return;
+  }
+
+  if (m_dbMgr->authenticateUser(user, pass)) {
     accept();
   } else {
-    QMessageBox::critical(this, tr("Authentication Failed"),
-                          tr("Invalid username or password!\n\nDefault "
-                             "credentials:\nUsername: admin\nPassword: admin"));
+    if (!m_dbMgr->isConnected()) {
+      QMessageBox::critical(
+          this, tr("Database Connection Error"),
+          tr("Lost connection to SQLite database (coffeebreak.db). Login aborted."));
+    } else {
+      QMessageBox::critical(
+          this, tr("Authentication Failed"),
+          tr("Invalid username or password!\n\nCredentials are verified against the SQLite 'users' table."));
+    }
     ui->m_passwordEdit->clear();
     ui->m_passwordEdit->setFocus();
   }
@@ -91,12 +100,12 @@ void LoginDialog::onHelpClicked() {
   QMessageBox::information(
       this, tr("CoffeeBreak Login Help"),
       tr("<b>CoffeeBreak Database Login</b><br><br>"
-         "Default credentials:<br>"
+         "Credentials are authenticated strictly against the local SQLite database (<b>coffeebreak.db</b>).<br>"
+         "If the database file is missing or unreachable, login is blocked for all accounts.<br><br>"
+         "Default database account:<br>"
          "<b>Username:</b> admin<br>"
          "<b>Password:</b> admin<br><br>"
-         "<b>Database:</b> SQLite Local DB (coffeebreak.db)<br>"
-         "Encrypted credentials storage enabled (SHA-256 + cryptographic "
-         "salt).<br><br>"
+         "Encrypted credentials storage enabled (SHA-256 + 128-bit cryptographic salt).<br><br>"
          "Support: <a href=\"https://lnrsoft.com\">LnRSoft.com</a>"));
 }
 

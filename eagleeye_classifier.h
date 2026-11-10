@@ -5,6 +5,13 @@
 #include <QString>
 #include <vector>
 
+enum class DigitMode {
+    Auto = 0,
+    OneDigit = 1,
+    TwoDigits = 2,
+    ThreeDigits = 3
+};
+
 class EagleEyeClassifier {
 public:
     EagleEyeClassifier();
@@ -14,8 +21,8 @@ public:
     // Predicts a single digit from a QImage (scales to 28x28 grayscale and normalizes)
     int predictDigit(const QImage &img, float *confidence = nullptr) const;
 
-    // Predicts from a 3-digit ROI image (splits horizontally into 3 digits)
-    QString predictRound(const QImage &roiImg, int *roundNumber = nullptr, float *avgConf = nullptr) const;
+    // Predicts from a ROI image (splits horizontally according to digit mode)
+    QString predictRound(const QImage &roiImg, int *roundNumber = nullptr, float *avgConf = nullptr, DigitMode mode = DigitMode::Auto) const;
 
     // Direct forward pass on [1, 28, 28] float array normalized in [-1, 1]
     std::vector<float> forward(const float *input28x28) const;

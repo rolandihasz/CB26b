@@ -1,0 +1,11 @@
+release/gtest-all.o
+release/gmock-all.o
+release/databasemanager.o
+release/eagleeye_classifier.o
+release/telemetrymanager.o
+release/main_test.o
+release/test_databasemanager.o
+release/test_eagleeye_classifier.o
+release/test_telemetrymanager.o
+release/moc_databasemanager.o
+release/moc_telemetrymanager.o

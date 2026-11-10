@@ -29,16 +29,17 @@ int main(int argc, char *argv[])
             break;
         }
     }
-    // Initialize local encrypted/authenticated SQLite database
+
+    // Open existing SQLite database (does not auto-create if missing so login strictly requires DB)
     DatabaseManager dbManager;
-    dbManager.initLocalDatabase();
+    dbManager.openExistingDatabase();
 
     // Launch CoffeeBreak Login popup dialog (support --skip-login for test automation)
     bool skipLogin = a.arguments().contains(QStringLiteral("--skip-login"));
     if (!skipLogin) {
         LoginDialog loginDialog(&dbManager);
         if (loginDialog.exec() != QDialog::Accepted) {
-            return 0; // Exit cleanly if user cancelled or closed dialog
+            return 0; // Exit cleanly if user cancelled or authentication failed
         }
     }
 

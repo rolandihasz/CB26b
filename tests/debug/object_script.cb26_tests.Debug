@@ -1,0 +1,11 @@
+debug/gtest-all.o
+debug/gmock-all.o
+debug/databasemanager.o
+debug/eagleeye_classifier.o
+debug/telemetrymanager.o
+debug/main_test.o
+debug/test_databasemanager.o
+debug/test_eagleeye_classifier.o
+debug/test_telemetrymanager.o
+debug/moc_databasemanager.o
+debug/moc_telemetrymanager.o

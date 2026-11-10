@@ -173,6 +173,50 @@ void MainWindow::setupUiCustom() {
     connect(m_btnVideoToggle, &QPushButton::clicked, this,
             &MainWindow::onLiveFeedClicked);
   }
+
+  // Add Digit Mode Selector to video card header bar
+  QWidget *videoHeaderBar = findChild<QWidget*>("videoHeaderBar");
+  if (videoHeaderBar && videoHeaderBar->layout()) {
+    QHBoxLayout *vLayout = qobject_cast<QHBoxLayout*>(videoHeaderBar->layout());
+    if (vLayout) {
+      QLabel *modeLbl = new QLabel(QStringLiteral("Detection:"), videoHeaderBar);
+      modeLbl->setStyleSheet(QStringLiteral("font-size: 11px; font-weight: 600; color: #94a3b8; margin-left: 6px;"));
+
+      m_digitModeCombo = new QComboBox(videoHeaderBar);
+      m_digitModeCombo->setObjectName(QStringLiteral("digitModeCombo"));
+      m_digitModeCombo->addItems({
+          QStringLiteral("Auto (Rounds 6-999)"),
+          QStringLiteral("1 Digit (Rounds 6-9)"),
+          QStringLiteral("2 Digits (Rounds 10-99)"),
+          QStringLiteral("3 Digits (Rounds 100+)")
+      });
+      if (m_videoFeed) {
+        m_digitModeCombo->setCurrentIndex(static_cast<int>(m_videoFeed->digitMode()));
+      }
+      m_digitModeCombo->setStyleSheet(QStringLiteral(
+          "QComboBox { background-color: #0b0f19; border: 1px solid #334155; border-radius: 4px; padding: 2px 6px; "
+          "font-size: 11px; color: #00ff44; min-width: 135px; font-weight: bold; }"
+          "QComboBox:hover { border-color: #00ff44; }"
+          "QComboBox QAbstractItemView { background-color: #0f172a; color: #f8fafc; selection-background-color: #1e293b; "
+          "selection-color: #00ff44; border: 1px solid #334155; }"));
+
+      int idx = m_btnVideoToggle ? vLayout->indexOf(m_btnVideoToggle) : -1;
+      if (idx >= 0) {
+        vLayout->insertWidget(idx, modeLbl);
+        vLayout->insertWidget(idx + 1, m_digitModeCombo);
+      } else {
+        vLayout->addWidget(modeLbl);
+        vLayout->addWidget(m_digitModeCombo);
+      }
+
+      connect(m_digitModeCombo, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [this](int index) {
+        if (m_videoFeed && index >= 0 && index <= 3) {
+          m_videoFeed->setDigitMode(static_cast<DigitMode>(index));
+        }
+      });
+    }
+  }
+
   connect(ui->btnExit, &QPushButton::clicked, this, &MainWindow::onExitClicked);
   updateLiveFeedButtonState(true);
 
@@ -194,6 +238,12 @@ void MainWindow::setupUiCustom() {
 void MainWindow::setupConnections() {
   // Video Feed -> EagleEye detection & signals
   m_videoFeed->setEagleEyeClassifier(&m_classifier);
+  connect(m_videoFeed, &VideoFeedWidget::digitModeChanged, this, [this](DigitMode mode) {
+    if (m_digitModeCombo) {
+      QSignalBlocker blocker(m_digitModeCombo);
+      m_digitModeCombo->setCurrentIndex(static_cast<int>(mode));
+    }
+  });
   connect(m_videoFeed, &VideoFeedWidget::roundDetected, this,
           &MainWindow::onRoundDetected);
   connect(m_videoFeed, &VideoFeedWidget::lapProgressChanged, this,
@@ -237,11 +287,19 @@ void MainWindow::initializeSystem() {
   appendLog(QStringLiteral("connecting..."));
 
   // 2. Initialize database
-  m_databaseMgr->initLocalDatabase();
+  if (!m_databaseMgr->openExistingDatabase()) {
+    m_databaseMgr->initLocalDatabase();
+  }
 
   // 3. Load EagleEye AI model weights
   QString weightsPath;
   const QStringList candidateWeights = {
+      QStringLiteral("C:/Users/rolan/Documents/EagleEye/eagle_eye_model.pth"),
+      QCoreApplication::applicationDirPath() + QStringLiteral("/eagle_eye_model.pth"),
+      QCoreApplication::applicationDirPath() + QStringLiteral("/../eagle_eye_model.pth"),
+      QCoreApplication::applicationDirPath() + QStringLiteral("/../../eagle_eye_model.pth"),
+      QStringLiteral("eagle_eye_model.pth"),
+      QStringLiteral("d:/cb26/cb26/eagle_eye_model.pth"),
       QCoreApplication::applicationDirPath() + QStringLiteral("/eagle_eye_weights.bin"),
       QCoreApplication::applicationDirPath() + QStringLiteral("/../eagle_eye_weights.bin"),
       QCoreApplication::applicationDirPath() + QStringLiteral("/../../eagle_eye_weights.bin"),
@@ -260,6 +318,7 @@ void MainWindow::initializeSystem() {
   }
 
   if (!weightsPath.isEmpty() && m_classifier.loadWeights(weightsPath)) {
+    m_loadedModelPath = weightsPath;
     appendLog(QStringLiteral(
         "EagleEye AI Model: Loaded successfully (%1).").arg(weightsPath));
     appendLog(QStringLiteral(
@@ -300,6 +359,9 @@ void MainWindow::initializeSystem() {
 
   // 5. Connect and start OBS Virtual Camera stream as default live feed
   m_videoFeed->initCamera(QStringLiteral("OBS Virtual Camera"));
+  m_databaseMgr->startSession(
+      QStringLiteral("LiveCamera"), QStringLiteral("OBS Virtual Camera"),
+      m_loadedModelPath, m_videoFeed->roi(), QStringLiteral("Auto"));
 
   // 6. Start telemetry monitoring (RTX 3090 Ti GPU & network)
   m_telemetryMgr->startMonitoring();
@@ -311,6 +373,24 @@ void MainWindow::appendLog(const QString &message) {
   QString line = QStringLiteral("%1 %2").arg(timestamp, message);
   if (m_eventLogView) {
     m_eventLogView->appendPlainText(line);
+    if (m_databaseMgr && m_databaseMgr->isConnected() &&
+        !message.startsWith(QStringLiteral("DB Check:"))) {
+      QString cat = QStringLiteral("SYSTEM");
+      if (message.startsWith(QStringLiteral("EagleEye")) ||
+          message.startsWith(QStringLiteral("Round completed"))) {
+        cat = QStringLiteral("AI");
+      } else if (message.startsWith(QStringLiteral("GPU Telemetry"))) {
+        cat = QStringLiteral("GPU");
+      } else if (message.startsWith(QStringLiteral("DB ")) ||
+                 message.contains(QStringLiteral("database"), Qt::CaseInsensitive)) {
+        cat = QStringLiteral("DB");
+      } else if (message.contains(QStringLiteral("Video"), Qt::CaseInsensitive) ||
+                 message.contains(QStringLiteral("Camera"), Qt::CaseInsensitive) ||
+                 message.startsWith(QStringLiteral("Run Analysis"))) {
+        cat = QStringLiteral("VIDEO");
+      }
+      m_databaseMgr->logSystemEvent(cat, message);
+    }
   }
 }
 
@@ -327,7 +407,41 @@ void MainWindow::onRoundDetected(int roundNumber, const QString &roundStr,
   m_lapTimeChart->addRound(roundNumber, durationSec);
 
   // Save to Database and CSV
-  m_databaseMgr->logRound(roundNumber, durationSec);
+  // Save detailed telemetry to SQLite Database and CSV
+  m_cumulativeRunSec += durationSec;
+  DatabaseManager::RoundTelemetryRecord rec;
+  rec.roundNumber = roundNumber;
+  rec.roundLabel = roundStr;
+  rec.durationSec = durationSec;
+  rec.deltaPrevSec = (m_prevRoundDurationSec > 0.0) ? (durationSec - m_prevRoundDurationSec) : 0.0;
+  rec.cumulativeRunSec = m_cumulativeRunSec;
+  m_prevRoundDurationSec = durationSec;
+  if (m_videoFeed) {
+    rec.aiConfidence = m_videoFeed->lastConfidence();
+    switch (m_videoFeed->digitMode()) {
+    case DigitMode::OneDigit: rec.digitMode = QStringLiteral("OneDigit"); break;
+    case DigitMode::TwoDigits: rec.digitMode = QStringLiteral("TwoDigits"); break;
+    case DigitMode::ThreeDigits: rec.digitMode = QStringLiteral("ThreeDigits"); break;
+    default: rec.digitMode = QStringLiteral("Auto"); break;
+    }
+    QRect r = m_videoFeed->roi();
+    rec.roiX = r.x();
+    rec.roiY = r.y();
+    rec.roiW = r.width();
+    rec.roiH = r.height();
+    rec.feedMode = m_videoFeed->isLiveCameraMode() ? QStringLiteral("LiveCamera")
+                                                   : QStringLiteral("VideoFile");
+    rec.sourceName = m_videoFeed->isLiveCameraMode()
+                         ? QStringLiteral("OBS Virtual Camera")
+                         : QFileInfo(m_videoFeed->currentVideoPath()).fileName();
+    rec.videoPosMs = m_videoFeed->videoPosition();
+    rec.playbackSpeed = m_videoFeed->playbackRate();
+  }
+  rec.gpuTempC = m_lastGpuStats.temperatureC;
+  rec.gpuUtilPct = m_lastGpuStats.gpuUtilPercent;
+  rec.vramUsedMb = m_lastGpuStats.memUsedMb;
+  rec.timestamp = QDateTime::currentDateTime();
+  m_databaseMgr->logRoundDetailed(rec);
   m_databaseMgr->saveRoundToCsv(roundNumber, durationSec,
                                 QStringLiteral("rounds.csv"));
 }
@@ -339,6 +453,7 @@ void MainWindow::onLapProgressChanged(int currentRound, double elapsedSec) {
 }
 
 void MainWindow::onGpuUpdated(const GpuStats &stats) {
+  m_lastGpuStats = stats;
   // Feed GPU telemetry into SignalChart channels
   double normTemp = (stats.temperatureC - 50.0) / 40.0;   // normalized
   double normUtil = (stats.gpuUtilPercent - 50.0) / 50.0; // normalized
@@ -346,6 +461,15 @@ void MainWindow::onGpuUpdated(const GpuStats &stats) {
 
   static int logThrottle = 0;
   if (++logThrottle % 5 == 0) { // Log once every ~15 seconds to avoid flooding
+    if (m_databaseMgr && m_databaseMgr->isConnected()) {
+      m_databaseMgr->logGpuSnapshot(
+          stats.name, stats.temperatureC, stats.fanSpeedPercent,
+          stats.gpuUtilPercent, stats.memUsedMb, stats.memTotalMb,
+          m_videoFeed ? m_videoFeed->currentRound() : 0,
+          m_videoFeed ? m_videoFeed->cameraFps() : 0,
+          m_internalIpEdit ? m_internalIpEdit->text() : QString(),
+          m_externalIpEdit ? m_externalIpEdit->text() : QString());
+    }
     appendLog(QStringLiteral("GPU Telemetry: %1 | Temp: %2°C | Fan: %3% | "
                              "Util: %4% | VRAM: %5 / %6 MB")
                   .arg(stats.name)
@@ -386,6 +510,11 @@ void MainWindow::onOpenVideoClicked() {
     // Clear previous round records in lap time chart to analyze new run freshly
     m_lapTimeChart->clearData();
     if (m_videoFeed->openVideoFile(filePath)) {
+      m_prevRoundDurationSec = 0.0;
+      m_cumulativeRunSec = 0.0;
+      m_databaseMgr->startSession(
+          QStringLiteral("VideoFile"), filePath, m_loadedModelPath,
+          m_videoFeed->roi(), m_digitModeCombo ? m_digitModeCombo->currentText() : QStringLiteral("Auto"));
       m_videoFeed->play();
       appendLog(QStringLiteral("Run Analysis Started: Loaded gameplay file %1")
                     .arg(filePath));
@@ -394,7 +523,10 @@ void MainWindow::onOpenVideoClicked() {
 }
 
 void MainWindow::onLoadTestGameplayClicked() {
-  QString testFile = QStringLiteral("D:/Containers/testdata/pre-recorded-gameplay.mp4");
+  QString testFile = QStringLiteral("D:/Containers/testdata/2026-09-05 06-40-47.remuxed_1.mp4");
+  if (!QFile::exists(testFile)) {
+    testFile = QStringLiteral("D:/Containers/testdata/pre-recorded-gameplay.mp4");
+  }
   if (!QFile::exists(testFile)) {
     testFile = QStringLiteral("pre-recorded-gameplay.mp4");
   }
@@ -409,6 +541,11 @@ void MainWindow::onLoadTestGameplayClicked() {
   // Clear previous run records for fresh analysis
   m_lapTimeChart->clearData();
   if (m_videoFeed->openVideoFile(testFile)) {
+    m_prevRoundDurationSec = 0.0;
+    m_cumulativeRunSec = 0.0;
+    m_databaseMgr->startSession(
+        QStringLiteral("VideoFile"), testFile, m_loadedModelPath,
+        m_videoFeed->roi(), m_digitModeCombo ? m_digitModeCombo->currentText() : QStringLiteral("Auto"));
     m_videoFeed->play();
     appendLog(QStringLiteral("Run Analysis Started: Loaded test gameplay %1").arg(testFile));
   }
@@ -433,6 +570,12 @@ void MainWindow::onStopVideoClicked() {
 void MainWindow::onLiveCameraClicked() {
   appendLog(QStringLiteral("Switching video feed back to OBS Virtual Camera (Live stream)..."));
   m_videoFeed->switchToLiveCamera();
+  m_prevRoundDurationSec = 0.0;
+  m_cumulativeRunSec = 0.0;
+  m_databaseMgr->startSession(
+      QStringLiteral("LiveCamera"), QStringLiteral("OBS Virtual Camera"),
+      m_loadedModelPath, m_videoFeed->roi(),
+      m_digitModeCombo ? m_digitModeCombo->currentText() : QStringLiteral("Auto"));
 }
 
 void MainWindow::onSpeedChanged(int index) {

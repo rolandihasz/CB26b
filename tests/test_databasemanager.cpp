@@ -152,3 +152,65 @@ TEST_F(DatabaseManagerTest, LogRoundExecution) {
     EXPECT_TRUE(db.logRound(1, 84.321));
     EXPECT_TRUE(db.logRound(2, 83.910));
 }
+
+
+TEST_F(DatabaseManagerTest, StrictLoginBlockedWhenDatabaseMissingOrDisconnected) {
+    DatabaseManager db;
+    // Before initLocalDatabase() creates coffeebreak.db, openExistingDatabase() and authenticateUser() must fail
+    EXPECT_FALSE(db.openExistingDatabase(QStringLiteral("non_existent_coffeebreak.db")));
+    EXPECT_FALSE(db.isConnected());
+    EXPECT_FALSE(db.authenticateUser(QStringLiteral("admin"), QStringLiteral("admin")));
+
+    // Initialize DB, then disconnect: authenticateUser("admin", "admin") must still fail while disconnected
+    ASSERT_TRUE(db.initLocalDatabase());
+    EXPECT_TRUE(db.authenticateUser(QStringLiteral("admin"), QStringLiteral("admin")));
+    db.disconnectDatabase();
+    EXPECT_FALSE(db.isConnected());
+    EXPECT_FALSE(db.authenticateUser(QStringLiteral("admin"), QStringLiteral("admin")));
+}
+
+TEST_F(DatabaseManagerTest, ComprehensiveTelemetrySchemaAndRecording) {
+    DatabaseManager db;
+    ASSERT_TRUE(db.initLocalDatabase());
+    ASSERT_TRUE(db.authenticateUser(QStringLiteral("admin"), QStringLiteral("admin")));
+
+    int sid = db.startSession(
+        QStringLiteral("VideoFile"),
+        QStringLiteral("D:/Containers/testdata/2026-09-05 06-40-47.remuxed_1.mp4"),
+        QStringLiteral("C:/Users/rolan/Documents/EagleEye/eagle_eye_model.pth"),
+        QRect(1684, 29, 189, 130),
+        QStringLiteral("Auto"));
+    EXPECT_GT(sid, 0);
+
+    DatabaseManager::RoundTelemetryRecord rec;
+    rec.roundNumber = 112;
+    rec.roundLabel = QStringLiteral("112");
+    rec.durationSec = 87.0;
+    rec.deltaPrevSec = 0.0;
+    rec.cumulativeRunSec = 87.0;
+    rec.aiConfidence = 0.99;
+    rec.digitMode = QStringLiteral("Auto");
+    rec.feedMode = QStringLiteral("VideoFile");
+    rec.sourceName = QStringLiteral("2026-09-05 06-40-47.remuxed_1.mp4");
+    rec.videoPosMs = 87000;
+    rec.playbackSpeed = 1.0;
+    rec.gpuTempC = 64.0;
+    rec.gpuUtilPct = 42.0;
+    rec.vramUsedMb = 4120;
+    EXPECT_TRUE(db.logRoundDetailed(rec));
+
+    EXPECT_TRUE(db.logGpuSnapshot(
+        QStringLiteral("NVIDIA GeForce RTX 3090 Ti"), 64.0, 55.0, 42.0,
+        4120, 24564, 112, 60,
+        QStringLiteral("192.168.1.100"), QStringLiteral("203.0.113.10")));
+    EXPECT_TRUE(db.logSystemEvent(QStringLiteral("AI"), QStringLiteral("Round 112 completed")));
+
+    auto rounds = db.loadRoundRecords();
+    ASSERT_EQ(rounds.size(), 1);
+    EXPECT_EQ(rounds[0].roundNumber, 112);
+    EXPECT_DOUBLE_EQ(rounds[0].durationSec, 87.0);
+
+    QString summary = db.databaseSummary();
+    EXPECT_TRUE(summary.contains(QStringLiteral("roundsTable: 1")));
+    EXPECT_TRUE(summary.contains(QStringLiteral("gpu_telemetry_log: 1")));
+}
